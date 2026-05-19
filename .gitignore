@@ -1,9 +1,34 @@
 # 本地密钥（勿提交）
+.env
+.env.*
+!.env.example
 backend/.env
 backend/.env.local
 backend/.env.*.local
+frontend/.env
 frontend/.env.local
-frontend/.env.*.local
+frontend/.env.*
+frontend/.env.development
 
-backend/node_modules/
-frontend/node_modules/
+# 依赖与构建产物
+node_modules/
+**/node_modules/
+dist/
+**/dist/
+
+# 日志与备份
+logs/
+**/logs/
+*.log
+backups/
+**/backups/
+*.tar.gz
+
+# 系统文件
+.DS_Store
+Thumbs.db
+
+# SQLite / 本地数据（可选）
+backend/data/dashboard.db
+backend/storage/
+backend/storage.local.bak/
