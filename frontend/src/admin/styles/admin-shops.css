@@ -1,0 +1,25 @@
+/* Scoped: .saas-admin */
+
+.saas-admin .saas-shops-page .shop-mgmt-page{
+  max-width: 100%;
+  overflow-x: hidden;
+}.saas-admin .saas-shops-page .shop-mgmt-table-wrap, .saas-admin .saas-shops-page .saas-table-wrap{
+  overflow-x: auto;
+  max-width: 100%;
+}.saas-admin .saas-shops-page .shop-mgmt-table{
+  table-layout: fixed;
+  min-width: 960px;
+}.saas-admin .saas-shops-page .shop-mgmt-table th, .saas-admin .saas-shops-page .shop-mgmt-table td{
+  vertical-align: middle;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}.saas-admin .saas-shops-page .shop-mgmt-actions{
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+}.saas-admin .saas-shops-page .shop-mgmt-actions .refresh-btn{
+  margin: 0;
+  font-size: 0.72rem;
+}
+

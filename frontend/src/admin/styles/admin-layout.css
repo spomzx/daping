@@ -1,0 +1,199 @@
+/* SaaS shell layout — scoped */
+
+.saas-admin .saas-shell {
+  display: flex;
+  min-height: 100vh;
+  background: #0a0e17;
+  color: #e8ecf4;
+}
+
+.saas-admin .saas-sidebar {
+  width: 220px;
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  border-right: 1px solid rgba(56, 189, 248, 0.15);
+  background: linear-gradient(180deg, #0d1320 0%, #0a0e17 100%);
+}
+
+.saas-admin .saas-sidebar-brand {
+  padding: 1rem 1rem 0.75rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.saas-admin .saas-sidebar-brand-title {
+  display: block;
+  font-size: 0.85rem;
+  font-weight: 600;
+  line-height: 1.3;
+}
+
+.saas-admin .saas-sidebar-brand-sub {
+  font-size: 0.7rem;
+  color: #38bdf8;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.saas-admin .saas-sidebar-nav {
+  flex: 1;
+  padding: 0.75rem 0.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  overflow-y: auto;
+}
+
+.saas-admin .saas-sidebar-footer {
+  padding: 0.5rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.saas-admin .saas-sidebar-link {
+  display: block;
+  width: 100%;
+  text-align: left;
+  padding: 0.5rem 0.75rem;
+  border-radius: 6px;
+  font-size: 0.875rem;
+  color: #94a3b8;
+  text-decoration: none;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  transition: background 0.15s, color 0.15s;
+}
+
+.saas-admin .saas-sidebar-link:hover {
+  background: rgba(56, 189, 248, 0.08);
+  color: #e2e8f0;
+}
+
+.saas-admin .saas-sidebar-link--active {
+  background: rgba(56, 189, 248, 0.15);
+  color: #38bdf8;
+  font-weight: 500;
+}
+
+.saas-admin .saas-sidebar-link--cta {
+  color: #fbbf24;
+  margin-top: 0.5rem;
+}
+
+.saas-admin .saas-sidebar-link--muted {
+  font-size: 0.75rem;
+  opacity: 0.7;
+}
+
+.saas-admin .saas-main {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.saas-admin .saas-topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0.75rem 1.25rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+  flex-shrink: 0;
+}
+
+.saas-admin .saas-topbar-title {
+  margin: 0;
+  font-size: 1.1rem;
+  font-weight: 600;
+}
+
+.saas-admin .saas-topbar-meta {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+  font-size: 0.8rem;
+  color: #94a3b8;
+}
+
+.saas-admin .saas-topbar-chip {
+  padding: 0.2rem 0.5rem;
+  border-radius: 4px;
+  background: rgba(34, 197, 94, 0.15);
+  color: #4ade80;
+}
+
+.saas-admin .saas-topbar-btn {
+  padding: 0.35rem 0.75rem;
+  border-radius: 6px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  background: transparent;
+  color: #e2e8f0;
+  cursor: pointer;
+  font-size: 0.8rem;
+}
+
+.saas-admin .saas-topbar-btn:hover {
+  background: rgba(255, 255, 255, 0.06);
+}
+
+.saas-admin .saas-main-content {
+  flex: 1;
+  min-height: 0;
+  overflow: auto;
+}
+
+.analytics-saas-embed .analytics-saas-meta {
+  padding: 0.5rem 1rem 0;
+  font-size: 0.8rem;
+  color: #94a3b8;
+}
+
+.analytics-saas-embed .analytics-page-main {
+  min-height: 0;
+}
+
+.saas-admin .saas-placeholder {
+  padding: 2rem 1.25rem;
+  max-width: 640px;
+}
+
+.saas-admin .saas-placeholder h2 {
+  margin: 0 0 0.5rem;
+  font-size: 1.25rem;
+}
+
+.saas-admin .saas-placeholder p {
+  margin: 0;
+  color: #94a3b8;
+  line-height: 1.6;
+}
+
+.saas-admin .saas-plan-banner {
+  padding: 0.6rem 1.25rem;
+  background: rgba(231, 76, 60, 0.12);
+  border-bottom: 1px solid rgba(231, 76, 60, 0.35);
+  color: #f87171;
+  font-size: 0.85rem;
+  text-align: center;
+}
+
+@media (max-width: 768px) {
+.saas-admin .saas-shell {
+    flex-direction: column;
+  }
+.saas-admin .saas-sidebar {
+    width: 100%;
+    flex-direction: row;
+    flex-wrap: wrap;
+    border-right: none;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+  }
+.saas-admin .saas-sidebar-nav {
+    flex-direction: row;
+    flex-wrap: wrap;
+    flex: none;
+  }
+}
+

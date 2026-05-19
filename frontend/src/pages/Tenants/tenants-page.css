@@ -1,0 +1,19 @@
+/* 租户管理页 — 基于 saas-admin 设计系统的页面级扩展 */
+
+/* 限定在 SaaS Admin 根节点内，避免污染 legacy */
+.saas-admin .tenants-admin-page {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  min-height: 0;
+}
+
+.tenants-admin-page .saas-page-frame__title {
+  display: none;
+}
+
+.tenants-admin-page .saas-page-frame__desc {
+  margin: 0 0 16px;
+  font-size: 13px;
+  color: var(--saas-admin-text-muted);
+}

@@ -1,0 +1,584 @@
+/* /legacy 设备级响应式：手机 / 平板 / 小电脑 / 电脑 / 大屏 */
+
+/* —— 全局：禁止横向溢出 —— */
+html.legacy-dashboard-route,
+html.legacy-dashboard-route body,
+html.legacy-dashboard-route #root {
+  width: 100%;
+  max-width: 100%;
+  overflow-x: hidden;
+}
+
+html.legacy-dashboard-route,
+html.legacy-dashboard-route body,
+html.legacy-dashboard-route #root {
+  height: 100%;
+}
+
+html.legacy-dashboard-route .war-room,
+html.legacy-dashboard-route .war-room--viewport {
+  overflow-x: hidden;
+  max-width: 100%;
+  min-width: 0;
+  width: 100%;
+}
+
+/* 覆盖 App.css 中 .war-room { min-width: 1200px }，避免小屏横向溢出 */
+html.legacy-dashboard-route .war-room {
+  min-width: 0;
+}
+
+/* —— 视口壳 —— */
+html.legacy-dashboard-route .war-room--viewport {
+  width: 100%;
+  min-width: 0;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  box-sizing: border-box;
+}
+
+html.legacy-dashboard-route .war-room--viewport > .loading,
+html.legacy-dashboard-route .war-room--viewport > .warn-text,
+html.legacy-dashboard-route .war-room--viewport > .war-header {
+  flex: 0 0 auto;
+  min-width: 0;
+}
+
+html.legacy-dashboard-route .war-room--viewport > .three-column,
+html.legacy-dashboard-route .war-room--viewport > .three-column.war-room-grid {
+  flex: 1 1 auto;
+  min-width: 0;
+  min-height: 0;
+  width: 100%;
+  display: grid;
+  gap: clamp(7px, 0.48vw, 9px);
+}
+
+/* 模块高度 token */
+html.legacy-dashboard-route .war-room--viewport {
+  --legacy-rank-h: clamp(280px, 34vh, 460px);
+  --legacy-realtime-h: clamp(420px, 55vh, 720px);
+  --legacy-chart-h: clamp(280px, 34vh, 460px);
+}
+
+/* —— 通用：卡片 / 表格 —— */
+html.legacy-dashboard-route .war-room--viewport .col,
+html.legacy-dashboard-route .war-room--viewport .tech-panel,
+html.legacy-dashboard-route .war-room--viewport .table-panel {
+  min-width: 0;
+  min-height: 0;
+}
+
+html.legacy-dashboard-route .war-room--viewport .shop-ranking-table,
+html.legacy-dashboard-route .war-room--viewport .product-ranking-table {
+  table-layout: fixed;
+  width: 100%;
+  min-width: 0;
+}
+
+html.legacy-dashboard-route .war-room--viewport .ranking-panel,
+html.legacy-dashboard-route .war-room--viewport .product-ranking-panel,
+html.legacy-dashboard-route .war-room--viewport .realtime-orders-panel {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  min-width: 0;
+  min-height: 0;
+}
+
+html.legacy-dashboard-route .war-room--viewport .ranking-panel > h3,
+html.legacy-dashboard-route .war-room--viewport .product-ranking-panel > h3,
+html.legacy-dashboard-route .war-room--viewport .realtime-orders-panel-title,
+html.legacy-dashboard-route .war-room--viewport .realtime-orders-panel-err {
+  flex: 0 0 auto;
+}
+
+html.legacy-dashboard-route .war-room--viewport .ranking-panel .table-wrap,
+html.legacy-dashboard-route .war-room--viewport .product-ranking-table-wrap {
+  flex: 1 1 auto;
+  height: 100%;
+  min-height: 0;
+  overflow-x: hidden;
+  overflow-y: auto;
+}
+
+html.legacy-dashboard-route .war-room--viewport .ranking-panel {
+  height: var(--legacy-rank-h);
+  max-height: var(--legacy-rank-h);
+}
+
+html.legacy-dashboard-route .war-room--viewport .product-ranking-panel {
+  height: var(--legacy-rank-h);
+  max-height: var(--legacy-rank-h);
+}
+
+html.legacy-dashboard-route .war-room--viewport .realtime-orders-table-region {
+  flex: 1 1 auto;
+  height: 100%;
+  min-height: 0;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+html.legacy-dashboard-route .war-room--viewport .realtime-orders-scroll {
+  flex: 1 1 auto;
+  height: 100%;
+  min-height: 0;
+  overflow-x: hidden;
+  overflow-y: auto;
+}
+
+html.legacy-dashboard-route .war-room--viewport .center-col > .realtime-orders-panel {
+  height: var(--legacy-realtime-h);
+  max-height: var(--legacy-realtime-h);
+  flex: 0 0 auto;
+}
+
+html.legacy-dashboard-route .war-room--viewport .center-col > .hero-panel {
+  flex: 0 0 auto;
+  min-width: 0;
+}
+
+/* KPI */
+html.legacy-dashboard-route .war-room--viewport .hero-kpi {
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+}
+
+html.legacy-dashboard-route .war-room--viewport .core-grid--quad,
+html.legacy-dashboard-route .war-room--viewport .core-grid--pair,
+html.legacy-dashboard-route .war-room--viewport .insights-mini-kpi {
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+}
+
+html.legacy-dashboard-route .war-room--viewport .hero-kpi span,
+html.legacy-dashboard-route .war-room--viewport .hero-kpi strong,
+html.legacy-dashboard-route .war-room--viewport .hero-kpi small,
+html.legacy-dashboard-route .war-room--viewport .core-grid span,
+html.legacy-dashboard-route .war-room--viewport .core-grid strong {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  max-width: 100%;
+}
+
+html.legacy-dashboard-route .war-room--viewport .product-ranking-table .pr-name-line1,
+html.legacy-dashboard-route .war-room--viewport .product-ranking-table .pr-name-line2 {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* —— 右侧图表卡片 —— */
+html.legacy-dashboard-route .war-room--viewport .right-col-filters-stack {
+  flex: 0 0 auto;
+  min-width: 0;
+}
+
+html.legacy-dashboard-route .war-room--viewport .chart-panel--responsive-chart {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  min-width: 0;
+  min-height: 0;
+  height: var(--legacy-chart-h);
+  max-height: var(--legacy-chart-h);
+}
+
+html.legacy-dashboard-route .war-room--viewport .chart-panel--responsive-chart .gmv-compare-trend-inner {
+  flex: 1 1 auto;
+  min-height: 0;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  height: 100%;
+}
+
+html.legacy-dashboard-route .war-room--viewport .chart-panel--responsive-chart .gmv-compare-trend-inner > h3,
+html.legacy-dashboard-route .war-room--viewport .chart-panel--responsive-chart .gmv-compare-summary-strip {
+  flex: 0 0 auto;
+}
+
+html.legacy-dashboard-route .war-room--viewport .chart-panel--responsive-chart .gmv-compare-chart-area {
+  flex: 1 1 auto;
+  min-height: 260px;
+  height: 100%;
+  width: 100%;
+  min-width: 0;
+  overflow: hidden;
+  position: relative;
+}
+
+html.legacy-dashboard-route .war-room--viewport .chart-panel--responsive-chart .gmv-compare-chart-area .recharts-responsive-container,
+html.legacy-dashboard-route .war-room--viewport .chart-panel--responsive-chart .chart-canvas-wrap--responsive,
+html.legacy-dashboard-route .war-room--viewport .chart-panel--responsive-chart .chart-canvas-wrap--responsive > div {
+  width: 100% !important;
+  height: 100% !important;
+  min-height: 260px;
+}
+
+html.legacy-dashboard-route .war-room--viewport .chart-panel--responsive-chart .chart-canvas-wrap--responsive {
+  flex: 1 1 auto;
+  min-height: 260px;
+  height: 100%;
+  overflow: hidden;
+}
+
+html.legacy-dashboard-route .war-room--viewport .gmv-compare-empty {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 260px;
+}
+
+/* —— GMV 图：杜绝空白（组件根在 chart-panel 内时同样生效） —— */
+html.legacy-dashboard-route .gmv-compare-trend-inner--dashboard-right {
+  flex: 1 1 auto;
+  min-height: 0;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+html.legacy-dashboard-route .gmv-compare-trend-inner--dashboard-right .gmv-compare-chart-area {
+  flex: 1 1 auto;
+  min-height: 260px;
+  height: 100%;
+}
+
+/* ═══════════════════════════════════════
+   1. 手机 0–767px：单列
+   ═══════════════════════════════════════ */
+@media (max-width: 767px) {
+  html.legacy-dashboard-route,
+  html.legacy-dashboard-route body,
+  html.legacy-dashboard-route #root {
+    overflow-y: auto;
+  }
+
+  html.legacy-dashboard-route .war-room--viewport {
+    height: auto;
+    max-height: none;
+    overflow-y: visible;
+  }
+
+  html.legacy-dashboard-route .war-room--viewport > .three-column.war-room-grid {
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-areas:
+      'left'
+      'center'
+      'right';
+    align-items: stretch;
+  }
+
+  html.legacy-dashboard-route .war-room--viewport .col.left-col,
+  html.legacy-dashboard-route .war-room--viewport .col.center-col,
+  html.legacy-dashboard-route .war-room--viewport .col.right-col {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    min-width: 0;
+    height: auto;
+    overflow: visible;
+  }
+
+  html.legacy-dashboard-route .war-room--viewport .right-col.right-column {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  html.legacy-dashboard-route .war-room--viewport .right-col.right-column > .chart-panel--responsive-chart {
+    width: 100%;
+  }
+}
+
+/* ═══════════════════════════════════════
+   2. 平板 768–1024px：左排行 | 中 KPI+订单；图表通栏
+   ═══════════════════════════════════════ */
+@media (min-width: 768px) and (max-width: 1024px) {
+  html.legacy-dashboard-route,
+  html.legacy-dashboard-route body,
+  html.legacy-dashboard-route #root {
+    overflow-y: auto;
+  }
+
+  html.legacy-dashboard-route .war-room--viewport {
+    height: auto;
+    max-height: none;
+    overflow-y: visible;
+  }
+
+  html.legacy-dashboard-route .war-room--viewport > .three-column.war-room-grid {
+    grid-template-columns: minmax(0, minmax(280px, 0.9fr)) minmax(0, minmax(380px, 1.2fr));
+    grid-template-areas:
+      'left center'
+      'right right';
+    align-items: start;
+    align-content: start;
+  }
+
+  html.legacy-dashboard-route .war-room--viewport .col.left-col {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    align-self: start;
+    height: auto;
+  }
+
+  html.legacy-dashboard-route .war-room--viewport .col.center-col {
+    align-self: start;
+    height: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  html.legacy-dashboard-route .war-room--viewport .right-col.right-column {
+    grid-column: 1 / -1;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 8px;
+    align-content: start;
+  }
+
+  html.legacy-dashboard-route .war-room--viewport .right-col.right-column > .right-col-filters-stack {
+    grid-column: 1 / -1;
+  }
+}
+
+@media (min-width: 900px) and (max-width: 1024px) {
+  html.legacy-dashboard-route .war-room--viewport .right-col.right-column {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  }
+}
+
+/* ═══════════════════════════════════════
+   3. 小电脑 1025–1279px：左+中 / 图表通栏双图
+   ═══════════════════════════════════════ */
+@media (min-width: 1025px) and (max-width: 1279px) {
+  html.legacy-dashboard-route,
+  html.legacy-dashboard-route body,
+  html.legacy-dashboard-route #root {
+    overflow-y: auto;
+  }
+
+  html.legacy-dashboard-route .war-room--viewport {
+    height: auto;
+    max-height: none;
+    overflow-y: visible;
+  }
+
+  html.legacy-dashboard-route .war-room--viewport > .three-column.war-room-grid {
+    grid-template-columns: minmax(0, minmax(300px, 0.9fr)) minmax(0, minmax(420px, 1.3fr));
+    grid-template-areas:
+      'left center'
+      'right right';
+    align-items: start;
+    align-content: start;
+  }
+
+  html.legacy-dashboard-route .war-room--viewport .col.left-col {
+    display: grid;
+    grid-template-rows: auto minmax(280px, 38vh) minmax(280px, 38vh);
+    gap: 8px;
+    align-self: start;
+    height: auto;
+  }
+
+  html.legacy-dashboard-route .war-room--viewport .left-col > .filter-panel {
+    grid-row: 1;
+  }
+
+  html.legacy-dashboard-route .war-room--viewport .ranking-panel {
+    grid-row: 2;
+    height: auto;
+    min-height: 280px;
+    max-height: 42vh;
+  }
+
+  html.legacy-dashboard-route .war-room--viewport .product-ranking-panel {
+    grid-row: 3;
+    height: auto;
+    min-height: 280px;
+    max-height: 42vh;
+  }
+
+  html.legacy-dashboard-route .war-room--viewport .col.center-col {
+    align-self: start;
+    height: auto;
+  }
+
+  html.legacy-dashboard-route .war-room--viewport .right-col.right-column {
+    grid-column: 1 / -1;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    gap: clamp(7px, 0.48vw, 9px);
+    align-content: start;
+  }
+
+  html.legacy-dashboard-route .war-room--viewport .right-col.right-column > .right-col-filters-stack {
+    grid-column: 1 / -1;
+  }
+}
+
+/* ═══════════════════════════════════════
+   4. 电脑 1280–1439px：三列同屏
+   ═══════════════════════════════════════ */
+@media (min-width: 1280px) {
+  html.legacy-dashboard-route,
+  html.legacy-dashboard-route body,
+  html.legacy-dashboard-route #root {
+    overflow-y: hidden;
+  }
+
+  html.legacy-dashboard-route .war-room--viewport {
+    height: 100vh;
+    max-height: 100vh;
+    overflow: hidden;
+  }
+
+  html.legacy-dashboard-route .war-room--viewport > .three-column.war-room-grid {
+    grid-template-columns: minmax(0, minmax(280px, 0.9fr)) minmax(0, minmax(400px, 1.3fr)) minmax(0, minmax(300px, 1fr));
+    grid-template-areas: 'left center right';
+    align-items: stretch;
+    align-content: stretch;
+  }
+
+  html.legacy-dashboard-route .war-room--viewport .col.left-col,
+  html.legacy-dashboard-route .war-room--viewport .col.center-col,
+  html.legacy-dashboard-route .war-room--viewport .col.right-col {
+    height: 100%;
+    min-height: 0;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    gap: clamp(7px, 0.48vw, 9px);
+  }
+
+  html.legacy-dashboard-route .war-room--viewport .col.left-col {
+    display: flex;
+    flex-direction: column;
+  }
+
+  html.legacy-dashboard-route .war-room--viewport .left-col > .filter-panel {
+    flex: 0 0 auto;
+  }
+
+  html.legacy-dashboard-route .war-room--viewport .ranking-panel {
+    flex: 1 1 0;
+    height: auto;
+    min-height: clamp(260px, 30vh, 380px);
+    max-height: none;
+  }
+
+  html.legacy-dashboard-route .war-room--viewport .product-ranking-panel {
+    flex: 1 1 0;
+    height: auto;
+    min-height: clamp(260px, 30vh, 380px);
+    max-height: none;
+  }
+
+  html.legacy-dashboard-route .war-room--viewport .center-col > .realtime-orders-panel {
+    flex: 1 1 0;
+    height: auto;
+    min-height: clamp(360px, 45vh, 620px);
+    max-height: none;
+  }
+
+  html.legacy-dashboard-route .war-room--viewport .right-col.right-column {
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
+  }
+
+  html.legacy-dashboard-route .war-room--viewport .right-col > .chart-panel--responsive-chart {
+    flex: 1 1 0;
+    height: auto;
+    min-height: clamp(260px, 28vh, 400px);
+    max-height: none;
+  }
+}
+
+/* ═══════════════════════════════════════
+   5. 大屏 1440px+：三列舒展
+   ═══════════════════════════════════════ */
+@media (min-width: 1440px) {
+  html.legacy-dashboard-route .war-room--viewport > .three-column.war-room-grid {
+    grid-template-columns: minmax(0, minmax(300px, 0.9fr)) minmax(0, minmax(420px, 1.35fr)) minmax(0, minmax(360px, 1fr));
+  }
+
+  html.legacy-dashboard-route .war-room--viewport {
+    --legacy-rank-h: clamp(300px, 36vh, 480px);
+    --legacy-realtime-h: clamp(440px, 52vh, 740px);
+    --legacy-chart-h: clamp(300px, 36vh, 480px);
+  }
+}
+
+/* 三列中列偏窄时隐藏实时订单 USD 列 */
+@media (min-width: 1280px) and (max-width: 1439px) {
+  html.legacy-dashboard-route .legacy-realtime-orders .realtime-orders-grid {
+    grid-template-columns:
+      minmax(0, 120px)
+      minmax(0, 100px)
+      48px
+      48px
+      minmax(0, 90px)
+      minmax(0, 70px);
+  }
+
+  html.legacy-dashboard-route .legacy-realtime-orders .realtime-orders-grid__cell--usd {
+    display: none !important;
+  }
+}
+
+/* —— 实时订单列宽 —— */
+html.legacy-dashboard-route .legacy-realtime-orders .realtime-orders-grid {
+  grid-template-columns:
+    minmax(0, 120px)
+    minmax(0, 100px)
+    48px
+    48px
+    minmax(0, 90px)
+    minmax(0, 80px)
+    minmax(0, 70px);
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+}
+
+html.legacy-dashboard-route .legacy-realtime-orders .realtime-orders-grid__cell {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  min-width: 0;
+}
+
+html.legacy-dashboard-route .legacy-realtime-orders .realtime-order-shop-link {
+  display: block;
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+html.legacy-dashboard-route .war-room--viewport .col {
+  grid-area: unset;
+}
+
+html.legacy-dashboard-route .war-room--viewport .col.left-col {
+  grid-area: left;
+}
+
+html.legacy-dashboard-route .war-room--viewport .col.center-col {
+  grid-area: center;
+}
+
+html.legacy-dashboard-route .war-room--viewport .col.right-col {
+  grid-area: right;
+}

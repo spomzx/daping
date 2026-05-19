@@ -1,0 +1,90 @@
+{
+  "selectedShopId": "all",
+  "baseCurrency": "THB",
+  "targetCurrency": "CNY",
+  "exchangeRate": 0.2116,
+  "summary": {
+    "todayOrders": 2,
+    "todayGmvBase": 0,
+    "todayGmvTarget": 0,
+    "avgOrderValueBase": 0,
+    "avgOrderValueTarget": 0,
+    "itemSoldCount": 0,
+    "skuOrderCount": 0,
+    "status": "normal",
+    "updatedAt": "2026-05-08 10:24:32"
+  },
+  "shops": [
+    {
+      "shopId": "my",
+      "shopName": "TikTok MY",
+      "region": "MY",
+      "currency": "MYR",
+      "todayOrders": 1,
+      "todayGmvBase": 0,
+      "todayGmvTarget": 0,
+      "status": "normal"
+    },
+    {
+      "shopId": "th",
+      "shopName": "TikTok TH",
+      "region": "TH",
+      "currency": "THB",
+      "todayOrders": 1,
+      "todayGmvBase": 0,
+      "todayGmvTarget": 0,
+      "status": "normal"
+    }
+  ],
+  "orders": [
+    {
+      "id": "7156621350390466306",
+      "shopId": "my",
+      "shopName": "TikTok MY",
+      "orderStatus": "unknown",
+      "platform": "TikTok",
+      "region": "MY",
+      "customerName": "***",
+      "orderAmountBase": 0,
+      "orderAmountTarget": 0,
+      "orderTime": ""
+    },
+    {
+      "id": "6841743441349706241",
+      "shopId": "th",
+      "shopName": "TikTok TH",
+      "orderStatus": "unknown",
+      "platform": "TikTok",
+      "region": "TH",
+      "customerName": "***",
+      "orderAmountBase": 0,
+      "orderAmountTarget": 0,
+      "orderTime": ""
+    }
+  ],
+  "productRankings": [],
+  "trend": [
+    {
+      "time": "10:00",
+      "gmvBase": 0,
+      "gmvTarget": 0,
+      "orders": 2
+    }
+  ],
+  "meta": {
+    "dataSource": "tiktok_open_api",
+    "collectMode": "official_api_scheduler",
+    "updatedAt": "2026-05-08 10:24:32",
+    "shopsFailed": [],
+    "shopsLoaded": [
+      "my",
+      "th"
+    ],
+    "shopsMissing": [],
+    "refreshInterval": 300,
+    "debugMeta": {
+      "ordersCacheFile": "e:\\TK项目\\数据大屏\\backend\\storage\\orders-cache.json",
+      "gmvCacheFile": "e:\\TK项目\\数据大屏\\backend\\storage\\gmv-cache.json"
+    }
+  }
+}

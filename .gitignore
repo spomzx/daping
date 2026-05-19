@@ -1,0 +1,9 @@
+# 本地密钥（勿提交）
+backend/.env
+backend/.env.local
+backend/.env.*.local
+frontend/.env.local
+frontend/.env.*.local
+
+backend/node_modules/
+frontend/node_modules/

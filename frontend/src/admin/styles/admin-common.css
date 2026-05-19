@@ -1,0 +1,32 @@
+/* SaaS Admin 各页共用的旧版工具类（自 App.css 迁出，限定在 .saas-admin 内） */
+
+.saas-admin .refresh-btn {
+  align-self: flex-start;
+  background: transparent;
+  border: 1px solid rgba(0, 229, 255, 0.75);
+  color: #00e5ff;
+  border-radius: 8px;
+  padding: 6px 12px;
+  cursor: pointer;
+  font-size: 13px;
+}
+
+.saas-admin .refresh-btn:hover {
+  box-shadow: 0 0 12px rgba(0, 229, 255, 0.35);
+}
+
+.saas-admin .locale-select {
+  min-height: 36px;
+  padding: 0 10px;
+  border-radius: 8px;
+  border: 1px solid rgba(0, 229, 255, 0.25);
+  background: rgba(255, 255, 255, 0.04);
+  color: #e8ecf4;
+  font-size: 13px;
+}
+
+.saas-admin .warn-text {
+  color: #f87171;
+  font-size: 13px;
+  margin: 0.5rem 0;
+}
