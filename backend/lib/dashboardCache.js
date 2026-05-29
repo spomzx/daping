@@ -12,7 +12,6 @@ const {
 const {
   snapshotNearExpiryRemainingMs,
 } = require('./dashboardSnapshotCache');
-const dashboardCacheService = require('../modules/dashboard/cache/dashboardCacheService');
 const {
   isDashboardApiReadonly,
   isPrecomputePipelineRequest,
@@ -24,7 +23,15 @@ const {
   purgeMemCacheLegacyPaidTrend,
 } = require('./dashboardTrendCache');
 
-const { memCache } = dashboardCacheService;
+/** @type {typeof import('../modules/dashboard/cache/dashboardCacheService') | null} */
+let dashboardCacheServiceModule = null;
+
+function dashboardCacheService() {
+  if (!dashboardCacheServiceModule) {
+    dashboardCacheServiceModule = require('../modules/dashboard/cache/dashboardCacheService');
+  }
+  return dashboardCacheServiceModule;
+}
 
 /** 趋势端点后台回填（cache miss 时不阻塞 HTTP） */
 /** @type {Map<string, Promise<unknown>>} */
@@ -198,9 +205,9 @@ function scheduleDashboardBackgroundRefresh(opts) {
         refreshSource,
         rowsPick,
       });
-      dashboardCacheService.logCacheEvent(
+      dashboardCacheService().logCacheEvent(
         'CACHE_REFRESH',
-        dashboardCacheService.metaFromContract(contract, cacheKey, endpoint),
+        dashboardCacheService().metaFromContract(contract, cacheKey, endpoint),
       );
       const empty = trendPayloadIsEmpty(endpoint, val, rowsPick, pointsPick);
       const cacheSource = empty ? 'db-empty' : 'db';
@@ -289,11 +296,11 @@ function resolveRefreshSource(q) {
 }
 
 function cacheGet(key) {
-  return dashboardCacheService.memoryGet(key);
+  return dashboardCacheService().memoryGet(key);
 }
 
 function cacheSet(key, val, ttlMs) {
-  dashboardCacheService.memorySet(key, val, ttlMs);
+  dashboardCacheService().memorySet(key, val, ttlMs);
 }
 
 /**
@@ -619,9 +626,9 @@ async function withDashboardCache(opts) {
   if (isTrendCacheEndpoint(endpoint)) {
     const memHit = cacheGet(cacheKey);
     if (memHit.hit && memHit.val != null) {
-      dashboardCacheService.logCacheEvent(
+      dashboardCacheService().logCacheEvent(
         'CACHE_HIT_MEMORY',
-        dashboardCacheService.metaFromContract(contract, cacheKey, endpoint),
+        dashboardCacheService().metaFromContract(contract, cacheKey, endpoint),
       );
       const near = isNearExpiryRemaining(memHit.ttlMs, contract);
       if (near) {
@@ -647,28 +654,28 @@ async function withDashboardCache(opts) {
     }
 
     const tableCtx = { endpoint, tenantId, contract, extra, cacheKey };
-    const tableFresh = await dashboardCacheService.readTableLayer(tableCtx, { allowStale: false });
+    const tableFresh = await dashboardCacheService().readTableLayer(tableCtx, { allowStale: false });
     if (tableFresh.hit && tableFresh.val != null) {
       const memTtl = tableFresh.ttlMs > 0 ? tableFresh.ttlMs : tableTtlMs(endpoint, contract);
       cacheSet(cacheKey, tableFresh.val, memTtl);
-      dashboardCacheService.logCacheEvent(
+      dashboardCacheService().logCacheEvent(
         'CACHE_HIT_TABLE',
-        dashboardCacheService.metaFromContract(contract, cacheKey, endpoint),
+        dashboardCacheService().metaFromContract(contract, cacheKey, endpoint),
       );
       return emitTrendResult('table', tableFresh.val, memTtl);
     }
 
     const maxStaleSec = Math.max(600, Math.ceil(trendCacheTtlMs(contract) / 1000) * 2);
-    const tableStale = await dashboardCacheService.readTableLayer(tableCtx, {
+    const tableStale = await dashboardCacheService().readTableLayer(tableCtx, {
       allowStale: true,
       maxStaleSec,
     });
     if (tableStale.hit && tableStale.val != null) {
       const memTtl = tableStale.ttlMs > 0 ? tableStale.ttlMs : tableTtlMs(endpoint, contract);
       cacheSet(cacheKey, tableStale.val, memTtl);
-      dashboardCacheService.logCacheEvent(
+      dashboardCacheService().logCacheEvent(
         'CACHE_STALE',
-        dashboardCacheService.metaFromContract(contract, cacheKey, endpoint),
+        dashboardCacheService().metaFromContract(contract, cacheKey, endpoint),
       );
       scheduleDashboardBackgroundRefresh({
           cacheKey,
@@ -689,13 +696,13 @@ async function withDashboardCache(opts) {
       });
     }
 
-    const dimStale = await dashboardCacheService.readTrendDimStale(tableCtx, maxStaleSec);
+    const dimStale = await dashboardCacheService().readTrendDimStale(tableCtx, maxStaleSec);
     if (dimStale.hit && dimStale.val != null) {
       const memTtl = dimStale.ttlMs > 0 ? dimStale.ttlMs : tableTtlMs(endpoint, contract);
       cacheSet(cacheKey, dimStale.val, memTtl);
-      dashboardCacheService.logCacheEvent(
+      dashboardCacheService().logCacheEvent(
         'CACHE_STALE',
-        dashboardCacheService.metaFromContract(contract, cacheKey, endpoint),
+        dashboardCacheService().metaFromContract(contract, cacheKey, endpoint),
       );
       scheduleDashboardBackgroundRefresh({
           cacheKey,
@@ -735,9 +742,9 @@ async function withDashboardCache(opts) {
 
   const cached = cacheGet(cacheKey);
   if (cached.hit && cached.val != null) {
-    dashboardCacheService.logCacheEvent(
+    dashboardCacheService().logCacheEvent(
       'CACHE_HIT_MEMORY',
-      dashboardCacheService.metaFromContract(contract, cacheKey, endpoint),
+      dashboardCacheService().metaFromContract(contract, cacheKey, endpoint),
     );
     const near = isNearExpiryRemaining(cached.ttlMs, contract);
     if (near) {
@@ -760,7 +767,7 @@ async function withDashboardCache(opts) {
     return emitHit('memory', cached.val, cached.ttlMs);
   }
 
-  const cacheResult = await dashboardCacheService.getDashboardCache(cacheKey, loader, {
+  const cacheResult = await dashboardCacheService().getDashboardCache(cacheKey, loader, {
     endpoint,
     tenantId,
     contract,
@@ -814,7 +821,7 @@ async function withDashboardCache(opts) {
 }
 
 function clearDashboardCache() {
-  dashboardCacheService.clearMemoryCache();
+  dashboardCacheService().clearMemoryCache();
 }
 
 module.exports = {
@@ -835,6 +842,12 @@ module.exports = {
   persistDashboardCaches,
   warmDashboardSnapshot,
   isDashboardApiReadonly,
-  memCache,
   purgeMemCacheLegacyPaidTrend,
 };
+
+Object.defineProperty(module.exports, 'memCache', {
+  enumerable: true,
+  get() {
+    return dashboardCacheService().memCache;
+  },
+});

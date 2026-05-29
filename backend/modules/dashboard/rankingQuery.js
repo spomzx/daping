@@ -2,7 +2,7 @@
 
 const { getMysqlPool } = require('../../db/mysqlPool');
 const { strictAnalyticsFilterOpts } = require('../../lib/resolveTenantShop');
-const { withDashboardCache } = require('../../lib/dashboardCache');
+const { getWithDashboardCache } = require('./cache/dashboardCacheRequire');
 const {
   parseDashboardFilterQuery,
   buildDashboardWhere,
@@ -44,7 +44,7 @@ async function queryDashboardRanking(tenantId, q, dataScope = null) {
       ? `assigned:${(dataScope.shopIds || []).join(',')}`
       : dataScope?.mode || 'all';
 
-  return withDashboardCache({
+  return getWithDashboardCache()({
     endpoint: 'ranking',
     tenantId,
     contract,

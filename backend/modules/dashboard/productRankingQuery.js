@@ -6,7 +6,7 @@
 
 const { getMysqlPool } = require('../../db/mysqlPool');
 const { strictAnalyticsFilterOpts } = require('../../lib/resolveTenantShop');
-const { withDashboardCache } = require('../../lib/dashboardCache');
+const { getWithDashboardCache } = require('./cache/dashboardCacheRequire');
 const {
   parseDashboardFilterQuery,
   buildDashboardWhere,
@@ -44,7 +44,7 @@ async function queryDashboardProductRanking(tenantId, q) {
   if (sortRaw === 'gmv') sort = 'gmv';
   else if (sortRaw === 'orders' || sortRaw === 'order') sort = 'orders';
 
-  return withDashboardCache({
+  return getWithDashboardCache()({
     endpoint: 'product-ranking',
     tenantId,
     contract,

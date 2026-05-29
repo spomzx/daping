@@ -7,7 +7,7 @@
 
 const { getMysqlPool } = require('../../db/mysqlPool');
 const { strictAnalyticsFilterOpts } = require('../../lib/resolveTenantShop');
-const { withDashboardCache } = require('../../lib/dashboardCache');
+const { getWithDashboardCache } = require('./cache/dashboardCacheRequire');
 const { unwrapTrendCachePayload } = require('../../lib/dashboardTrendCacheMeta');
 const {
   parseDashboardFilterQuery,
@@ -45,7 +45,7 @@ async function queryDashboardTrend(tenantId, q, auth, logEndpoint = 'trend') {
   const groupBy = String(q.groupBy || q.group_by || 'hour').toLowerCase() === 'day' ? 'day' : 'hour';
   const endpoint = logEndpoint === 'order-volume' ? 'order-volume' : 'trend';
 
-  const stamped = await withDashboardCache({
+  const stamped = await getWithDashboardCache()({
     endpoint,
     tenantId,
     contract: parsed,

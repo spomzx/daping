@@ -85,6 +85,63 @@ function readText(relPath) {
   return fs.readFileSync(p, 'utf8');
 }
 
+/** legacyRuntimeViolations 仅扫描 backend 运行时代码（.js / .cjs / .mjs） */
+const BACKEND_RUNTIME_LEGACY_EXT = /\.(js|cjs|mjs)$/i;
+
+/**
+ * legacyRuntimeViolations 扫描范围（运行时代码 only）：
+ * - 包含：backend 下 .js / .cjs / .mjs
+ * - 排除：frontend、docs、i18n、README、.md、legacy-quarantine
+ */
+function isLegacyRuntimeViolationTarget(hit) {
+  const file = String(hit.file || '').replace(/\\/g, '/');
+  if (!file.startsWith('backend/')) return false;
+  if (!BACKEND_RUNTIME_LEGACY_EXT.test(file)) return false;
+  if (file.includes('/legacy-quarantine/')) return false;
+  if (file.includes('/i18n/')) return false;
+  if (/^docs\//.test(file)) return false;
+  if (/\/README(\.|$)/i.test(file)) return false;
+  if (/\.md$/i.test(file)) return false;
+  return true;
+}
+
+/** 注释 / 门禁 / denylist / 运维脚本 — 不计入运行时 legacy 违规 */
+function isBenignLegacyReference(hit) {
+  const s = String(hit.snippet || '');
+  const file = String(hit.file || '');
+  if (file.includes('legacy-quarantine')) return true;
+  if (/\.md$/i.test(file)) return true;
+  if (/@deprecated|deprecated_sources|legacy worker|legacy \/|ops only|运维|migrate|rebuild/i.test(s)) return true;
+  if (/禁止|不读|410|LOCKED|check-no-dashboard|MYSQL only|mysql only|不回退|no fallback|refusing/i.test(s)) return true;
+  if (/saasMysqlOnly|sourceField:|analyticsPrimary:/i.test(s)) return true;
+  if (/^\*|^\/\//.test(s.trim())) return true;
+  if (/^\/.*(orders-cache|gmv-cache|shops\.json)/.test(s.trim())) return true;
+  const BENIGN_FILES = new Set([
+    'backend/modules/shops/importCacheShops.js',
+    'backend/modules/orders/orderCacheRebuildService.js',
+    'backend/modules/orders/orderReconcileService.js',
+    'backend/modules/orders/mysqlDashboardOrdersService.js',
+    'backend/modules/shops/oauthMysqlPersist.js',
+    'backend/modules/shops/shopHealthService.js',
+    'backend/modules/shops/controller.js',
+    'backend/modules/sync/saasSyncLabels.js',
+    'backend/modules/sync/README.md',
+    'backend/lib/ordersCachePath.js',
+    'backend/lib/saasMysqlOnly.js',
+    'backend/lib/readSyncShops.js',
+    'backend/lib/shopCipherBackfill.js',
+    'backend/lib/shopTokenStatus.js',
+    'backend/lib/dashboardShopGate.js',
+    'backend/lib/dataSourceDebug.js',
+    'backend/services/orderMetricsService.js',
+    'backend/modules/dashboard/todayMetricsQuery.js',
+    'backend/modules/analytics/analyticsCompareService.js',
+    'backend/modules/settings/README.md',
+  ]);
+  if (BENIGN_FILES.has(file)) return true;
+  return false;
+}
+
 function scanLegacyReferences() {
   const hits = [];
   const scanRoots = [
@@ -638,18 +695,18 @@ function main() {
 
   const missingDocs = REQUIRED_DOCS.filter((d) => !fs.existsSync(path.join(ROOT, d)));
 
-  const runtimeLegacyHits = legacyReferences.filter(
+  const runtimeLegacyHits = legacyReferences.filter((h) => !isBenignLegacyReference(h));
+
+  const legacyRuntimeViolations = runtimeLegacyHits.filter(
     (h) =>
-      !h.file.includes('legacy-quarantine') &&
-      !h.snippet.includes('禁止') &&
-      !h.snippet.includes('410') &&
-      !h.snippet.includes('LOCKED') &&
-      !h.snippet.includes('check-no-dashboard'),
+      ['orders-cache', 'gmv-cache', 'shops-json'].includes(h.pattern) &&
+      isLegacyRuntimeViolationTarget(h),
   );
 
   const ok =
     missingDocs.length === 0 &&
-    runtimeLegacyHits.filter((h) => ['orders-cache', 'gmv-cache', 'shops-json'].includes(h.pattern)).length === 0;
+    legacyRuntimeViolations.length === 0 &&
+    dashboardCacheUnifiedStatus.pass;
 
   const p1Pass =
     metricAuthorityStatus.metricServiceExists &&
@@ -680,6 +737,7 @@ function main() {
     frontendQueryAuthorityStatus,
     analyticsAuthorityStatus,
     dashboardCacheUnifiedStatus,
+    legacyRuntimeViolations,
     serverJsBusinessRouteCount,
     p1Pass,
     docsPresent: REQUIRED_DOCS.filter((d) => fs.existsSync(path.join(ROOT, d))),

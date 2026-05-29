@@ -26,7 +26,7 @@ const {
   contractForDashboardApi,
 } = require('./filterContract');
 const { logDashboardSlow, slowMetaFromContract } = require('../../lib/dashboardSlowLog');
-const { withDashboardCache } = require('../../lib/dashboardCache');
+const { getWithDashboardCache } = require('./cache/dashboardCacheRequire');
 
 function afOpts() {
   return strictAnalyticsFilterOpts();
@@ -245,7 +245,7 @@ async function queryDashboardGmvCompare(tenantId, q) {
   const contract = contractForDashboardApi(parseDashboardFilterQuery(q, tenantId));
   const groupBy = String(q.groupBy || q.group_by || 'hour').toLowerCase() === 'day' ? 'day' : 'hour';
 
-  return withDashboardCache({
+  return getWithDashboardCache()({
     endpoint: 'gmv-compare',
     tenantId,
     contract,

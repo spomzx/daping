@@ -1,8 +1,12 @@
 'use strict';
 
 const { getMysqlPool } = require('../../db/mysqlPool');
-const metricService = require('../analytics/metricService');
 const { getUnifiedSummary } = require('../../lib/metricsAuthority');
+
+/** 延迟加载，避免 dashboard/service ↔ metricService ↔ orderMetricsService 环 */
+function metricService() {
+  return require('../analytics/metricService');
+}
 const { normalizeTrendRows } = require('../../lib/dashboardTrendNormalize');
 
 function ensurePool() {
@@ -22,30 +26,30 @@ async function getSummary(tenantId, q, auth) {
 
 async function getTrend(tenantId, q, auth) {
   ensurePool();
-  const { rows, debug } = await metricService.getDashboardTrend(tenantId, q, auth);
+  const { rows, debug } = await metricService().getDashboardTrend(tenantId, q, auth);
   return { rows: normalizeTrendRows(rows), debug };
 }
 
 async function getOrderVolume(tenantId, q, auth) {
   ensurePool();
-  const { rows, debug } = await metricService.getDashboardOrderVolume(tenantId, q, auth);
+  const { rows, debug } = await metricService().getDashboardOrderVolume(tenantId, q, auth);
   return { rows: normalizeTrendRows(rows), debug };
 }
 
 async function getGmvCompare(tenantId, q) {
   ensurePool();
-  return metricService.getDashboardGmvCompare(tenantId, q);
+  return metricService().getDashboardGmvCompare(tenantId, q);
 }
 
 async function getRanking(tenantId, q, auth) {
   ensurePool();
-  const { items, debug } = await metricService.getDashboardShopRanking(tenantId, q, auth);
+  const { items, debug } = await metricService().getDashboardShopRanking(tenantId, q, auth);
   return { items, source: 'mysql', debug };
 }
 
 async function getProductRanking(tenantId, q) {
   ensurePool();
-  const { items, debug } = await metricService.getDashboardProductRanking(tenantId, q);
+  const { items, debug } = await metricService().getDashboardProductRanking(tenantId, q);
   return { items, source: 'mysql', debug };
 }
 

@@ -19,7 +19,14 @@ const {
   buildReadonlyCacheMissShape,
   trendPayloadIsEmpty,
 } = require('./dashboardTrendCacheMeta');
-const dashboardCacheService = require('../modules/dashboard/cache/dashboardCacheService');
+/** @type {typeof import('../modules/dashboard/cache/dashboardCacheService') | null} */
+let dashboardCacheServiceModule = null;
+function dashboardCacheService() {
+  if (!dashboardCacheServiceModule) {
+    dashboardCacheServiceModule = require('../modules/dashboard/cache/dashboardCacheService');
+  }
+  return dashboardCacheServiceModule;
+}
 const { precomputeTtlMs } = require('./dashboardPrecomputeTtl');
 const { hintDashboardPrecompute, logDashboardReadonly } = require('./dashboardReadonly');
 
@@ -189,15 +196,15 @@ async function serveDashboardReadonly(opts) {
   if (isTrendCacheEndpoint(endpoint)) {
     const memHit = cacheGet(cacheKey);
     if (memHit.hit && memHit.val != null && !trendPayloadIsEmpty(endpoint, memHit.val, rowsPick, pointsPick)) {
-      dashboardCacheService.logCacheEvent(
+      dashboardCacheService().logCacheEvent(
         'CACHE_HIT_MEMORY',
-        dashboardCacheService.metaFromContract(contract, cacheKey, endpoint),
+        dashboardCacheService().metaFromContract(contract, cacheKey, endpoint),
       );
       return emitHit('memory', memHit.val, memHit.ttlMs, { cacheLabel: 'hit-memory', durationMs: 0 });
     }
 
     const t0Table = Date.now();
-    const tableFresh = await dashboardCacheService.readTableLayer(tableCtx, { allowStale: false });
+    const tableFresh = await dashboardCacheService().readTableLayer(tableCtx, { allowStale: false });
     if (
       tableFresh.hit &&
       tableFresh.val != null &&
@@ -205,9 +212,9 @@ async function serveDashboardReadonly(opts) {
     ) {
       const memTtl = tableFresh.ttlMs > 0 ? tableFresh.ttlMs : tableTtlMs(endpoint, contract);
       cacheSet(cacheKey, tableFresh.val, memTtl);
-      dashboardCacheService.logCacheEvent(
+      dashboardCacheService().logCacheEvent(
         'CACHE_HIT_TABLE',
-        dashboardCacheService.metaFromContract(contract, cacheKey, endpoint),
+        dashboardCacheService().metaFromContract(contract, cacheKey, endpoint),
       );
       return emitHit('table', tableFresh.val, memTtl, {
         cacheLabel: 'hit-table',
@@ -224,9 +231,9 @@ async function serveDashboardReadonly(opts) {
       if (tableStale.hit && tableStale.val != null) {
         const memTtl = tableStale.ttlMs != null && tableStale.ttlMs > 0 ? tableStale.ttlMs : tableTtlMs(endpoint, contract);
         cacheSet(cacheKey, tableStale.val, memTtl);
-        dashboardCacheService.logCacheEvent(
+        dashboardCacheService().logCacheEvent(
           'CACHE_STALE',
-          dashboardCacheService.metaFromContract(contract, cacheKey, endpoint),
+          dashboardCacheService().metaFromContract(contract, cacheKey, endpoint),
         );
         hintDashboardPrecompute({ cacheKey, endpoint, tenantId, contract });
         return emitHit('table-stale', tableStale.val, memTtl, {
@@ -244,9 +251,9 @@ async function serveDashboardReadonly(opts) {
       if (dimStale.hit && dimStale.val != null) {
         const memTtl = dimStale.ttlMs != null && dimStale.ttlMs > 0 ? dimStale.ttlMs : tableTtlMs(endpoint, contract);
         cacheSet(cacheKey, dimStale.val, memTtl);
-        dashboardCacheService.logCacheEvent(
+        dashboardCacheService().logCacheEvent(
           'CACHE_STALE',
-          dashboardCacheService.metaFromContract(contract, cacheKey, endpoint),
+          dashboardCacheService().metaFromContract(contract, cacheKey, endpoint),
         );
         hintDashboardPrecompute({ cacheKey, endpoint, tenantId, contract });
         return emitHit('table-stale', dimStale.val, memTtl, {
@@ -264,14 +271,14 @@ async function serveDashboardReadonly(opts) {
 
   const memHit = cacheGet(cacheKey);
   if (memHit.hit && memHit.val != null) {
-    dashboardCacheService.logCacheEvent(
+    dashboardCacheService().logCacheEvent(
       'CACHE_HIT_MEMORY',
-      dashboardCacheService.metaFromContract(contract, cacheKey, endpoint),
+      dashboardCacheService().metaFromContract(contract, cacheKey, endpoint),
     );
     return emitHit('memory', memHit.val, memHit.ttlMs, { cacheLabel: 'hit-memory', durationMs: 0 });
   }
 
-  const cacheResult = await dashboardCacheService.getDashboardCache(cacheKey, async () => null, {
+  const cacheResult = await dashboardCacheService().getDashboardCache(cacheKey, async () => null, {
     endpoint,
     tenantId,
     contract,
