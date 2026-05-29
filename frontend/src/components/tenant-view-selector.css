@@ -1,0 +1,39 @@
+.tenant-view-select {
+  display: inline-flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+  max-width: 280px;
+}
+
+.tenant-view-select--compact {
+  max-width: 220px;
+}
+
+.tenant-view-select__label {
+  font-size: 11px;
+  color: #8fa3b8;
+  line-height: 1.2;
+}
+
+.tenant-view-select__control {
+  padding: 6px 8px;
+  border-radius: 6px;
+  border: 1px solid rgba(0, 229, 255, 0.25);
+  background: #020b12;
+  color: #eaf0f6;
+  font-size: 13px;
+  max-width: 100%;
+}
+
+.tenant-view-select__meta {
+  font-size: 11px;
+  color: #8fa3b8;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.saas-topbar-meta .tenant-view-select {
+  flex-shrink: 1;
+}

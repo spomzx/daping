@@ -1,0 +1,85 @@
+/* 图表区域 — 限定在 .legacy-dashboard，不裁切轴/图例 */
+
+.legacy-dashboard .war-room--viewport .chart-panel.chart-panel--responsive-chart,
+.legacy-dashboard .war-room--viewport .chart-panel.chart-panel--tall {
+  display: flex;
+  flex-direction: column;
+  flex: 0 1 auto;
+  min-height: 280px;
+  max-height: 420px;
+  height: clamp(280px, 32vh, 420px);
+  overflow: visible;
+}
+
+.legacy-dashboard .war-room--viewport .chart-panel--responsive-chart .gmv-compare-trend-inner,
+.legacy-dashboard .gmv-compare-trend-inner--dashboard-right,
+.legacy-dashboard .gmv-compare-trend-inner {
+  flex: 1 1 auto;
+  display: flex;
+  flex-direction: column;
+  overflow: visible;
+  height: 100%;
+  min-height: 0;
+}
+
+.legacy-dashboard .war-room--viewport .chart-panel--responsive-chart .gmv-compare-chart-area,
+.legacy-dashboard .gmv-compare-trend-inner--dashboard-right .gmv-compare-chart-area,
+.legacy-dashboard .gmv-compare-chart-area {
+  position: relative;
+  flex: 1 1 auto;
+  min-height: 240px;
+  height: 100%;
+  width: 100%;
+  overflow: visible;
+  padding-bottom: 12px;
+  box-sizing: border-box;
+}
+
+.legacy-dashboard .war-room--viewport .chart-panel--responsive-chart .chart-canvas-wrap--responsive,
+.legacy-dashboard .chart-panel--tall .chart-canvas-wrap,
+.legacy-dashboard .chart-canvas-wrap {
+  flex: 1 1 auto;
+  min-height: 240px;
+  height: 100%;
+  width: 100%;
+  overflow: visible;
+  padding-bottom: 12px;
+  box-sizing: border-box;
+}
+
+.legacy-dashboard .chart-canvas-wrap--responsive > div,
+.legacy-dashboard .chart-canvas-wrap > div {
+  height: 100% !important;
+  min-height: 240px;
+  width: 100% !important;
+}
+
+.legacy-dashboard .order-volume-chart-wrap {
+  min-height: 260px;
+}
+
+.legacy-dashboard .order-volume-chart-state {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 260px;
+  width: 100%;
+}
+
+.legacy-dashboard .war-room--viewport .chart-panel--responsive-chart .gmv-compare-chart-area .recharts-responsive-container,
+.legacy-dashboard .gmv-compare-chart-area .recharts-responsive-container,
+.legacy-dashboard .gmv-compare-chart-area .recharts-wrapper {
+  width: 100% !important;
+  height: 100% !important;
+  min-height: 240px;
+  overflow: visible !important;
+}
+
+.legacy-dashboard .gmv-compare-chart-area .recharts-surface,
+.legacy-dashboard .gmv-compare-chart-area .recharts-layer {
+  overflow: visible !important;
+}
+
+.legacy-dashboard .tech-panel.chart-panel {
+  overflow: visible;
+}

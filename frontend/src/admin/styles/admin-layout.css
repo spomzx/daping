@@ -1,0 +1,26 @@
+/* Legacy shell aliases — 主样式见 admin-dashboard-shell.css */
+
+.saas-admin .saas-plan-banner {
+  flex-shrink: 0;
+  padding: 0.6rem var(--admin-content-pad-x);
+  background: rgba(231, 76, 60, 0.12);
+  border-bottom: 1px solid rgba(231, 76, 60, 0.35);
+  color: #f87171;
+  font-size: var(--admin-font-md);
+  text-align: center;
+}
+
+.saas-admin .saas-placeholder {
+  padding: 0;
+  max-width: none;
+}
+
+.analytics-saas-embed .analytics-saas-meta {
+  padding: 0.5rem 1rem 0;
+  font-size: var(--admin-font-sm);
+  color: var(--admin-text-muted);
+}
+
+.analytics-saas-embed .analytics-page-main {
+  min-height: 0;
+}

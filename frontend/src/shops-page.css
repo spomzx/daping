@@ -1,0 +1,61 @@
+/**
+ * /shops 专用：禁止 flex 子项压缩高度，禁止表格纵向内滚
+ * 由 ShopMgmtPage 单独 import，优先级高于 App.css 通用 dashboard 规则
+ */
+
+html.shops-route,
+html.shops-route body,
+html.shops-route #root,
+html.shops-route .app {
+  height: auto !important;
+  min-height: 100% !important;
+  max-height: none !important;
+  overflow-x: auto !important;
+  overflow-y: auto !important;
+}
+
+html.shops-route .dashboard-shell,
+html.shops-route .dashboard-main,
+html.shops-route .app-shell-main,
+html.shops-route .shops-page,
+html.shops-route .shop-mgmt-shell,
+html.shops-route .shop-mgmt-panel,
+html.shops-route .shops-table-card,
+html.shops-route .shop-mgmt-page-card,
+html.shops-route .app-shell-card,
+html.shops-route .tech-panel,
+html.shops-route .shop-mgmt-table-wrap,
+html.shops-route .war-room {
+  height: auto !important;
+  max-height: none !important;
+  min-height: auto !important;
+  flex: 0 0 auto !important;
+  overflow: visible !important;
+}
+
+html.shops-route .dashboard-shell {
+  min-height: 100vh !important;
+  display: flex !important;
+  flex-direction: column !important;
+}
+
+html.shops-route .war-header {
+  flex: 0 0 auto !important;
+}
+
+html.shops-route .shops-table-scroll {
+  width: 100% !important;
+  height: auto !important;
+  max-height: none !important;
+  min-height: 0 !important;
+  flex: none !important;
+  overflow-x: auto !important;
+  overflow-y: visible !important;
+  padding-bottom: 120px !important;
+}
+
+html.shops-route .shop-mgmt-table thead th {
+  position: sticky;
+  top: 0;
+  z-index: 2;
+}

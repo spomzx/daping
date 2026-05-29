@@ -1,0 +1,297 @@
+/* 数据总览（SaaS）— 独立于实时大屏 /legacy */
+
+.saas-admin .analytics-overview-page {
+  width: 100%;
+  min-width: 0;
+  max-width: 100%;
+}
+
+.saas-admin .analytics-overview-page .analytics-overview-meta {
+  margin: 0 0 var(--admin-spacing-md);
+  font-size: var(--admin-font-sm);
+  color: var(--admin-text-muted);
+  line-height: var(--admin-line-normal);
+}
+
+.saas-admin .analytics-overview-page .analytics-overview-filter-hint {
+  margin: 0 0 var(--admin-spacing-md);
+  font-size: var(--admin-font-xs);
+  color: var(--admin-text-muted);
+  line-height: var(--admin-line-normal);
+}
+
+.saas-admin .analytics-overview-page .analytics-overview-stats {
+  margin-bottom: var(--admin-spacing-lg);
+}
+
+.saas-admin .analytics-overview-page .analytics-overview-stats-grid {
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+}
+
+.saas-admin .analytics-overview-page .analytics-overview-grid {
+  display: grid;
+  gap: 20px;
+  width: 100%;
+  margin-bottom: var(--admin-spacing-lg);
+  align-items: stretch;
+}
+
+.saas-admin .analytics-overview-page .analytics-overview-grid--pair {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+/* 卡片固定高度，自身不滚动 */
+.saas-admin .analytics-overview-page .analytics-overview-card {
+  margin-bottom: 0;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  min-height: 580px;
+  max-height: 580px;
+  height: 100%;
+  overflow: hidden;
+}
+
+.saas-admin .analytics-overview-page .analytics-overview-card .admin-section__body {
+  display: flex;
+  flex-direction: column;
+  flex: 1 1 auto;
+  min-height: 0;
+  min-width: 0;
+  overflow: hidden;
+}
+
+/* 唯一滚动区域：表格 tbody 区域（仅纵向滚动） */
+.saas-admin .analytics-overview-page .analytics-overview-table-body {
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow-x: hidden;
+  overflow-y: auto;
+  scrollbar-gutter: stable;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(148, 163, 184, 0.35) transparent;
+}
+
+.saas-admin .analytics-overview-page .analytics-overview-table-body::-webkit-scrollbar {
+  width: 8px;
+}
+
+.saas-admin .analytics-overview-page .analytics-overview-table-body::-webkit-scrollbar-thumb {
+  background: rgba(148, 163, 184, 0.28);
+  border-radius: 999px;
+}
+
+.saas-admin .analytics-overview-page .admin-table-wrap,
+.saas-admin .analytics-overview-page .saas-table-wrap {
+  width: 100%;
+  max-height: none;
+  overflow: visible;
+}
+
+/* 覆盖 saas-table 全局 min-width:1024px，避免横向溢出 */
+.saas-admin .analytics-overview-page .admin-table.saas-table {
+  width: 100%;
+  min-width: 0;
+  table-layout: fixed;
+  border-collapse: collapse;
+}
+
+.saas-admin .analytics-overview-page .admin-table.saas-table th,
+.saas-admin .analytics-overview-page .admin-table.saas-table td,
+.saas-admin .analytics-overview-page .admin-table.saas-table .admin-table__cell {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  vertical-align: middle;
+  padding: 10px 12px;
+  line-height: 1.35;
+}
+
+/* 排行表统一行高 */
+.saas-admin .analytics-overview-page .analytics-table--products tbody tr,
+.saas-admin .analytics-overview-page .analytics-table--shops tbody tr {
+  min-height: 52px;
+}
+
+.saas-admin .analytics-overview-page .admin-table th.num,
+.saas-admin .analytics-overview-page .admin-table td.num,
+.saas-admin .analytics-overview-page .admin-table .admin-table__cell.num,
+.saas-admin .analytics-overview-page .admin-table .analytics-td-metric,
+.saas-admin .analytics-overview-page .admin-table .analytics-td-gmv,
+.saas-admin .analytics-overview-page .admin-table .analytics-td-orders {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+/* 排名列居中 */
+.saas-admin .analytics-overview-page .admin-table .analytics-td-rank {
+  width: 48px;
+  text-align: center;
+  white-space: nowrap;
+}
+
+/* 商品排行：rank 48px / product 自适应 / metric 100px */
+.saas-admin .analytics-overview-page .analytics-table--products .analytics-table-col-rank {
+  width: 48px;
+}
+
+.saas-admin .analytics-overview-page .analytics-table--products .analytics-table-col-product {
+  width: auto;
+  min-width: 0;
+}
+
+.saas-admin .analytics-overview-page .analytics-table--products .analytics-table-col-metric {
+  width: 100px;
+  min-width: 90px;
+  max-width: 110px;
+}
+
+/* 店铺排行：rank 48px / shop 自适应 / market 72px / gmv 100px / orders 80px */
+.saas-admin .analytics-overview-page .analytics-table--shops .analytics-table-col-rank {
+  width: 48px;
+}
+
+.saas-admin .analytics-overview-page .analytics-table--shops .analytics-table-col-shop {
+  width: auto;
+  min-width: 0;
+}
+
+.saas-admin .analytics-overview-page .analytics-table--shops .analytics-table-col-market {
+  width: 72px;
+  min-width: 64px;
+}
+
+.saas-admin .analytics-overview-page .analytics-table--shops .analytics-table-col-gmv {
+  width: 100px;
+  min-width: 90px;
+  max-width: 110px;
+}
+
+.saas-admin .analytics-overview-page .analytics-table--shops .analytics-table-col-orders {
+  width: 80px;
+  min-width: 72px;
+  max-width: 90px;
+}
+
+.saas-admin .analytics-overview-page .admin-table .analytics-td-product {
+  min-width: 0;
+  min-height: 54px;
+  white-space: normal;
+  word-break: break-word;
+  overflow: hidden;
+}
+
+.saas-admin .analytics-overview-page .admin-table .analytics-td-shop {
+  min-width: 0;
+  min-height: 44px;
+  white-space: normal;
+  word-break: break-word;
+  overflow: hidden;
+}
+
+.saas-admin .analytics-overview-page .analytics-product-name {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  overflow: hidden;
+  word-break: break-word;
+  line-height: 1.35;
+  font-weight: 600;
+}
+
+.saas-admin .analytics-overview-page .analytics-shop-ellipsis {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  overflow: hidden;
+  word-break: break-word;
+  line-height: 1.35;
+  font-weight: 500;
+}
+
+.saas-admin .analytics-overview-page .analytics-sku-sub {
+  margin-top: 4px;
+  font-size: var(--admin-font-xs);
+  line-height: 1.3;
+  color: var(--admin-text-muted);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 100%;
+}
+
+.saas-admin .analytics-overview-page .analytics-td-metric,
+.saas-admin .analytics-overview-page .analytics-td-gmv,
+.saas-admin .analytics-overview-page .analytics-td-orders {
+  width: 100px;
+  min-width: 90px;
+  max-width: 110px;
+  white-space: nowrap;
+  overflow: visible;
+  text-overflow: clip;
+  font-weight: 700;
+  font-size: var(--admin-font-sm);
+  font-variant-numeric: tabular-nums;
+  color: var(--admin-text);
+}
+
+.saas-admin .analytics-overview-page .analytics-table--shops .analytics-td-orders {
+  width: 80px;
+  min-width: 72px;
+  max-width: 90px;
+}
+
+.saas-admin .analytics-overview-page .analytics-td-market {
+  white-space: nowrap;
+  text-align: center;
+}
+
+.saas-admin .analytics-overview-page .analytics-module-err {
+  flex-shrink: 0;
+  margin: 0 0 var(--admin-spacing-xs);
+}
+
+.saas-admin .analytics-overview-page .admin-table-footer {
+  flex-shrink: 0;
+  margin-top: auto;
+  padding-top: var(--admin-spacing-sm);
+  padding-bottom: var(--admin-spacing-xs);
+  border-top: 1px solid var(--admin-border);
+}
+
+.saas-admin .analytics-overview-page .analytics-overview-search-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--admin-spacing-sm);
+  margin-top: var(--admin-spacing-sm);
+  width: 100%;
+}
+
+.saas-admin .analytics-overview-page .analytics-overview-search-row .admin-toolbar__search {
+  flex: 1 1 200px;
+  min-width: 180px;
+}
+
+.saas-admin .analytics-overview-page .admin-section--filter {
+  width: 100%;
+}
+
+@media (max-width: 1200px) {
+  .saas-admin .analytics-overview-page .analytics-overview-stats-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 960px) {
+  .saas-admin .analytics-overview-page .analytics-overview-grid--pair {
+    grid-template-columns: 1fr;
+  }
+
+  .saas-admin .analytics-overview-page .analytics-overview-stats-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .saas-admin .analytics-overview-page .analytics-overview-card {
+    min-height: 480px;
+    max-height: 520px;
+  }
+}

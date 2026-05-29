@@ -1,0 +1,35 @@
+{
+  "name": "backend",
+  "version": "1.0.0",
+  "description": "",
+  "main": "server.js",
+  "scripts": {
+    "dev": "node server.js",
+    "start": "node server.js",
+    "openapi:sync": "node scripts/tiktokOpenApiSyncWorker.js",
+    "sync:queue": "node scripts/syncQueueWorker.js",
+    "sync:audit": "node scripts/syncStagingAudit.js",
+    "backup:mysql": "node scripts/mysql-backup.js",
+    "check:saas-routes": "node scripts/check-saas-routes.js",
+    "check:dashboard-contract": "node scripts/check-dashboard-contract-consistency.js",
+    "check:no-dashboard-legacy": "node scripts/check-no-dashboard-legacy.js",
+    "audit:saas-unification": "node scripts/auditSaasUnification.js",
+    "check:dashboard-runtime-single-source": "node scripts/check-dashboard-runtime-single-source.js",
+    "pm2:start": "pm2 start ecosystem.config.js",
+    "pm2:reload": "pm2 reload ecosystem.config.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "dependencies": {
+    "bcrypt": "^5.1.1",
+    "better-sqlite3": "^11.10.0",
+    "cors": "^2.8.6",
+    "dayjs": "^1.11.20",
+    "dotenv": "^16.4.5",
+    "express": "^5.2.1",
+    "jsonwebtoken": "^9.0.2",
+    "mysql2": "^3.14.0"
+  }
+}

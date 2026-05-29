@@ -1,0 +1,67 @@
+/* Scoped: .saas-admin */
+
+.saas-admin .saas-shops-page .shop-mgmt-page{
+  max-width: 100%;
+  overflow-x: hidden;
+}.saas-admin .saas-shops-page .shop-mgmt-table-wrap, .saas-admin .saas-shops-page .saas-table-wrap{
+  overflow-x: auto;
+  max-width: 100%;
+}.saas-admin .saas-shops-page .shop-mgmt-table{
+  table-layout: fixed;
+  min-width: 960px;
+}.saas-admin .saas-shops-page .shop-mgmt-table th, .saas-admin .saas-shops-page .shop-mgmt-table td{
+  vertical-align: middle;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  padding: 8px 12px;
+  line-height: 1.35;
+}.saas-admin .saas-shops-page .shop-mgmt-table thead th{
+  padding: 10px 12px;
+  min-height: 40px;
+}.saas-admin .saas-shops-page .shop-mgmt-actions{
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 4px;
+  white-space: normal;
+}.saas-admin .saas-shops-page .shop-mgmt-actions .admin-btn{
+  margin: 0;
+  min-height: 28px;
+  height: 28px;
+  padding: 0 8px;
+  font-size: 0.7rem;
+  flex: 0 0 auto;
+}
+
+.saas-admin .saas-shops-page .admin-section--auth .admin-section__body{
+  padding-top: 0;
+}
+
+.saas-admin .tiktok-oauth-single-wrap {
+  width: 100%;
+  max-width: 100%;
+}
+
+.saas-admin .tiktok-oauth-card--single {
+  max-width: 480px;
+  margin: 0;
+}
+
+.saas-admin .tiktok-oauth-single-err {
+  margin: var(--admin-spacing-sm) 0 0;
+  font-size: var(--admin-font-sm);
+  color: #f87171;
+}
+
+.saas-admin .saas-shops-page .shop-mgmt-table-wrap{
+  width: 100%;
+  overflow-x: auto;
+}
+
+.saas-admin .saas-shops-page .shop-mgmt-table{
+  min-width: 1100px;
+  width: 100%;
+}
+

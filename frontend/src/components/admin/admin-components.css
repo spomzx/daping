@@ -1,0 +1,271 @@
+/* Admin Component System — 组件层样式（依赖 admin-design-tokens / admin-layout-system） */
+
+.saas-admin .admin-stat-card__label,
+.saas-admin .shop-mgmt-stat-label {
+  margin: 0;
+  font-size: var(--admin-font-xs);
+  font-weight: 500;
+  color: var(--admin-text-muted);
+}
+
+.saas-admin .admin-stat-card__value,
+.saas-admin .shop-mgmt-stat-value {
+  margin: 0;
+  font-size: var(--admin-font-2xl);
+  font-weight: 700;
+  line-height: var(--admin-line-tight);
+  color: var(--admin-text);
+}
+
+.saas-admin .admin-stat-card__hint {
+  margin: 0;
+  font-size: var(--admin-font-sm);
+  color: var(--admin-text-subtle);
+  line-height: var(--admin-line-normal);
+}
+
+.saas-admin .admin-stat-card--warning .admin-stat-card__value {
+  color: #facc15;
+}
+
+.saas-admin .admin-stat-card--danger .admin-stat-card__value {
+  color: #f87171;
+}
+
+/* —— Badge / Status tag —— */
+.saas-admin .admin-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 4px 10px;
+  font-size: var(--admin-font-xs);
+  font-weight: 500;
+  border-radius: 999px;
+  line-height: 1.2;
+  white-space: nowrap;
+  border: 1px solid transparent;
+}
+
+.saas-admin .admin-badge--success {
+  color: #4ade80;
+  background: rgba(74, 222, 128, 0.12);
+  border-color: rgba(74, 222, 128, 0.35);
+}
+
+.saas-admin .admin-badge--warning {
+  color: #facc15;
+  background: rgba(250, 204, 21, 0.12);
+  border-color: rgba(250, 204, 21, 0.35);
+}
+
+.saas-admin .admin-badge--danger {
+  color: #f87171;
+  background: rgba(248, 113, 113, 0.12);
+  border-color: rgba(248, 113, 113, 0.35);
+}
+
+.saas-admin .admin-badge--info {
+  color: #7dd3fc;
+  background: rgba(56, 189, 248, 0.12);
+  border-color: rgba(56, 189, 248, 0.35);
+}
+
+.saas-admin .admin-badge--neutral {
+  color: var(--admin-text-muted);
+  background: rgba(148, 163, 184, 0.1);
+  border-color: rgba(148, 163, 184, 0.25);
+}
+
+.saas-admin .admin-badge--processing {
+  color: #a78bfa;
+  background: rgba(167, 139, 250, 0.12);
+  border-color: rgba(167, 139, 250, 0.35);
+}
+
+/* 兼容旧 saas-badge 类名（逐步迁移） */
+.saas-admin .saas-badge--success {
+  color: #4ade80;
+  background: rgba(74, 222, 128, 0.12);
+  border: 1px solid rgba(74, 222, 128, 0.35);
+}
+
+.saas-admin .saas-badge--warn {
+  color: #facc15;
+  background: rgba(250, 204, 21, 0.12);
+  border: 1px solid rgba(250, 204, 21, 0.35);
+}
+
+.saas-admin .saas-badge--danger {
+  color: #f87171;
+  background: rgba(248, 113, 113, 0.12);
+  border: 1px solid rgba(248, 113, 113, 0.35);
+}
+
+.saas-admin .saas-badge--muted {
+  color: var(--admin-text-muted);
+  background: rgba(148, 163, 184, 0.1);
+  border: 1px solid rgba(148, 163, 184, 0.25);
+}
+
+/* —— Button variants —— */
+.saas-admin .admin-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  cursor: pointer;
+  border: 1px solid transparent;
+  box-sizing: border-box;
+  font-family: inherit;
+  line-height: 1.2;
+  transition:
+    background 0.15s ease,
+    border-color 0.15s ease,
+    opacity 0.15s ease;
+}
+
+.saas-admin .admin-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.saas-admin .admin-btn--danger {
+  border-color: rgba(248, 113, 113, 0.45);
+  background: rgba(127, 29, 29, 0.55);
+  color: #fecaca;
+}
+
+.saas-admin .admin-btn--danger:hover:not(:disabled) {
+  background: rgba(185, 28, 28, 0.65);
+}
+
+.saas-admin .admin-btn--ghost {
+  border-color: transparent;
+  background: transparent;
+  color: var(--admin-text-muted);
+}
+
+.saas-admin .admin-btn--ghost:hover:not(:disabled) {
+  background: rgba(148, 163, 184, 0.1);
+  color: var(--admin-text);
+}
+
+.saas-admin .admin-btn--active {
+  border-color: var(--admin-accent);
+  box-shadow: 0 0 0 1px var(--admin-accent-muted);
+}
+
+/* —— Toolbar —— */
+.saas-admin .admin-toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  gap: var(--admin-spacing-sm);
+}
+
+/* —— Table shell —— */
+.saas-admin .admin-table-shell {
+  box-sizing: border-box;
+}
+
+.saas-admin .admin-table-shell__header {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--admin-spacing-sm) var(--admin-spacing-md);
+  min-height: 36px;
+  margin-bottom: var(--admin-spacing-md);
+  padding-bottom: var(--admin-spacing-md);
+  border-bottom: 1px solid var(--admin-border-subtle);
+}
+
+.saas-admin .admin-table-shell__title {
+  margin: 0 0 var(--admin-spacing-xs);
+  font-size: var(--admin-font-lg);
+  font-weight: 600;
+  color: var(--admin-text);
+  line-height: var(--admin-line-tight);
+}
+
+.saas-admin .admin-table-shell__desc {
+  margin: 0;
+  font-size: var(--admin-font-sm);
+  line-height: var(--admin-line-normal);
+  color: var(--admin-text-muted);
+}
+
+.saas-admin .admin-table-shell__meta {
+  margin: 0 0 var(--admin-spacing-md);
+  font-size: var(--admin-font-sm);
+  color: var(--admin-text-subtle);
+}
+
+.saas-admin .admin-table-shell__footer {
+  margin-top: var(--admin-spacing-md);
+  padding-top: var(--admin-spacing-xs);
+}
+
+/* —— Empty state —— */
+.saas-admin .admin-empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--admin-spacing-sm);
+  padding: var(--admin-spacing-2xl) var(--admin-spacing-lg);
+  text-align: center;
+  border-radius: var(--admin-radius-md);
+  border: 1px dashed var(--admin-border);
+  background: rgba(2, 6, 23, 0.35);
+}
+
+.saas-admin .admin-empty-state--section {
+  min-height: 220px;
+}
+
+.saas-admin .admin-empty-state--table {
+  min-height: 180px;
+  max-height: 220px;
+  padding: var(--admin-spacing-lg) var(--admin-spacing-md);
+}
+
+.saas-admin .admin-empty-state--analytics {
+  min-height: 180px;
+  max-height: 220px;
+  padding: var(--admin-spacing-lg) var(--admin-spacing-md);
+}
+
+.saas-admin .admin-empty-state--compact {
+  min-height: 160px;
+  max-height: 200px;
+  padding: var(--admin-spacing-md);
+}
+
+.saas-admin .admin-empty-state__title {
+  margin: 0;
+  font-size: var(--admin-font-lg);
+  font-weight: 600;
+  color: var(--admin-text);
+}
+
+.saas-admin .admin-empty-state__desc {
+  margin: 0;
+  max-width: 420px;
+  font-size: var(--admin-font-sm);
+  color: var(--admin-text-muted);
+  line-height: var(--admin-line-normal);
+}
+
+/* —— Pagination component —— */
+.saas-admin .admin-pagination-bar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--admin-spacing-sm);
+  font-size: var(--admin-font-sm);
+  color: var(--admin-text-muted);
+}
+
+.saas-admin .admin-pagination-bar__info {
+  font-variant-numeric: tabular-nums;
+}

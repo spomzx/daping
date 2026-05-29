@@ -1,0 +1,39 @@
+# 本地密钥（勿提交）
+.env
+.env.*
+!.env.example
+backend/.env
+backend/.env.local
+backend/.env.*.local
+frontend/.env
+frontend/.env.local
+frontend/.env.*
+frontend/.env.development
+
+# 依赖与构建产物
+node_modules/
+**/node_modules/
+dist/
+**/dist/
+
+# 日志与备份
+logs/
+**/logs/
+*.log
+backups/
+**/backups/
+*.tar.gz
+
+# 系统文件
+.DS_Store
+Thumbs.db
+.vscode/*
+!.vscode/extensions.json
+.idea
+
+# SQLite / 本地运行时 storage（与 deploy-backup-excludes 一致）
+backend/data/*.db
+backend/data/*.db-shm
+backend/data/*.db-wal
+backend/storage/
+backend/storage.local.bak/

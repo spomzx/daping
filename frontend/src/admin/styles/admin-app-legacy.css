@@ -1,0 +1,929 @@
+/* SaaS Admin：自 App.css 迁出的 shop-mgmt / analytics 规则 */
+
+.saas-admin .app-shell-card, .saas-admin .analytics-page-card, .saas-admin .reconcile-page-card{
+  flex: 1;
+  min-height: 0;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}.saas-admin .analytics-page-main{
+  flex: 1;
+  min-height: 0;
+  overflow: hidden;
+}.saas-admin .analytics-page-root{
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  min-width: 0;
+}.saas-admin .shop-mgmt-page .shop-mgmt-table-wrap{
+  max-height: none;
+  overflow: visible;
+}.saas-admin /* 店铺管理右侧抽屉（大屏内，带进入/离开动画） */
+.shop-mgmt-drawer-overlay{
+  --shop-overlay-dur: 210ms;
+  --shop-drawer-dur: 260ms;
+  --shop-drawer-ease: cubic-bezier(0.22, 1, 0.36, 1);
+
+  position: fixed;
+  inset: 0;
+  z-index: 2400;
+  display: flex;
+  justify-content: flex-end;
+  align-items: stretch;
+  overflow-x: hidden;
+  background: rgba(2, 8, 18, 0.72);
+  backdrop-filter: blur(5px);
+  -webkit-backdrop-filter: blur(5px);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity var(--shop-overlay-dur) ease-out, backdrop-filter var(--shop-overlay-dur) ease-out;
+  will-change: opacity;
+}.saas-admin .shop-mgmt-drawer-overlay--open{
+  opacity: 1;
+  pointer-events: auto;
+}.saas-admin .shop-mgmt-drawer{
+  width: min(1120px, 100%);
+  max-width: 100%;
+  min-width: 0;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  background:
+    linear-gradient(200deg, rgba(0, 229, 255, 0.08), transparent 44%),
+    linear-gradient(180deg, #0b1526 0%, #0a1628 55%, #061018 100%);
+  border-left: 1px solid rgba(90, 200, 255, 0.38);
+  box-shadow: -12px 0 40px rgba(0, 0, 0, 0.45), inset 0 0 72px rgba(0, 120, 200, 0.05);
+  transform: translateX(100%);
+  transition: transform var(--shop-drawer-dur) var(--shop-drawer-ease), box-shadow var(--shop-drawer-dur) ease-out;
+  will-change: transform;
+  pointer-events: auto;
+}.saas-admin .shop-mgmt-drawer-overlay--open .shop-mgmt-drawer{
+  transform: translateX(0);
+  box-shadow:
+    -20px 0 56px rgba(0, 0, 0, 0.58),
+    -4px 0 32px rgba(0, 200, 255, 0.12),
+    inset 0 0 72px rgba(0, 140, 220, 0.07);
+}.saas-admin .shop-mgmt-drawer-head{
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 16px 20px;
+  border-bottom: 1px solid rgba(90, 180, 255, 0.22);
+}.saas-admin .shop-mgmt-drawer-kicker{
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  color: #7ecbff;
+  opacity: 0.9;
+}.saas-admin .shop-mgmt-drawer-title{
+  margin: 4px 0 0;
+  font-size: 18px;
+  font-weight: 700;
+  color: #f0f7ff;
+  text-shadow: 0 0 18px rgba(0, 200, 255, 0.25);
+}.saas-admin .shop-mgmt-drawer-subtitle{
+  margin: 6px 0 0;
+  font-size: 12px;
+  line-height: 1.45;
+  color: #8aa4c8;
+  font-weight: 400;
+  max-width: 52ch;
+}.saas-admin .shop-mgmt-stats{
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+  gap: 12px;
+  margin-bottom: 16px;
+}.saas-admin .shop-mgmt-stat-card{
+  padding: 14px 16px;
+  border-radius: 12px;
+  border: 1px solid rgba(90, 160, 255, 0.22);
+  background: linear-gradient(165deg, rgba(14, 32, 56, 0.85) 0%, rgba(8, 18, 32, 0.65) 100%);
+}.saas-admin .shop-mgmt-stat-label{
+  font-size: 11px;
+  color: #8aa4c8;
+  letter-spacing: 0.02em;
+  margin-bottom: 6px;
+}.saas-admin .shop-mgmt-stat-value{
+  font-size: 22px;
+  font-weight: 700;
+  color: #e8f4ff;
+  line-height: 1.2;
+}.saas-admin .shop-mgmt-stat-value--muted{
+  font-size: 16px;
+  color: #b8d4ff;
+}.saas-admin .shop-mgmt-primary-actions{
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  align-items: center;
+  margin-bottom: 12px;
+  padding: 12px 14px;
+  border-radius: 12px;
+  border: 1px solid rgba(90, 160, 255, 0.28);
+  background: rgba(12, 28, 48, 0.55);
+}.saas-admin .shop-mgmt-primary-actions .shop-mgmt-btn--oauth{
+  font-weight: 600;
+}.saas-admin .shop-mgmt-tenant-id-input{
+  flex: 0 0 auto;
+}.saas-admin .shop-mgmt-toolbar{
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  align-items: center;
+  margin-bottom: 14px;
+  padding: 12px 14px;
+  border-radius: 12px;
+  border: 1px solid rgba(90, 160, 255, 0.18);
+  background: rgba(8, 18, 32, 0.45);
+}.saas-admin .shop-mgmt-toolbar input, .saas-admin .shop-mgmt-toolbar select{
+  min-width: 0;
+}.saas-admin .shop-mgmt-search{
+  flex: 1 1 180px;
+  min-width: 160px;
+  max-width: 280px;
+}.saas-admin .shop-mgmt-table-wrap{
+  border: 1px solid rgba(90, 180, 255, 0.22);
+  border-radius: 12px;
+  overflow-x: auto;
+  overflow-y: visible;
+  background: linear-gradient(180deg, rgba(14, 28, 48, 0.55) 0%, rgba(8, 18, 32, 0.4) 100%);
+}.saas-admin .shop-mgmt-table-wrap.shops-table-scroll{
+  padding-bottom: 80px;
+}.saas-admin .shop-mgmt-table thead th{
+  position: sticky;
+  top: 0;
+  z-index: 2;
+}.saas-admin .shop-mgmt-table{
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
+  table-layout: auto;
+}.saas-admin .shop-mgmt-table thead tr{
+  background: linear-gradient(90deg, #152a45 0%, #1a3352 100%);
+}.saas-admin .shop-mgmt-table th{
+  text-align: left;
+  padding: 12px 14px;
+  color: #b8dcff;
+  font-weight: 600;
+  font-size: 12px;
+  white-space: nowrap;
+  border-bottom: 1px solid rgba(90, 160, 255, 0.15);
+}.saas-admin .shop-mgmt-table td{
+  padding: 12px 14px;
+  vertical-align: middle;
+  border-top: 1px solid rgba(26, 42, 65, 0.85);
+  color: #dfe9ff;
+}.saas-admin .shop-mgmt-shop-cell{
+  min-width: 160px;
+  max-width: 240px;
+}.saas-admin .shop-mgmt-shop-name{
+  font-weight: 600;
+  color: #e8f4ff;
+  line-height: 1.35;
+  word-break: break-word;
+}.saas-admin .shop-mgmt-shop-id{
+  font-size: 11px;
+  color: #6d86a8;
+  margin-top: 4px;
+  word-break: break-all;
+  line-height: 1.3;
+}.saas-admin .shop-mgmt-actions{
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  align-items: center;
+}.saas-admin .shop-mgmt-btn{
+  padding: 5px 10px;
+  border-radius: 6px;
+  border: 1px solid rgba(90, 160, 255, 0.45);
+  background: rgba(20, 50, 90, 0.35);
+  color: #cfe6ff;
+  cursor: pointer;
+  font-size: 12px;
+  white-space: nowrap;
+}.saas-admin .shop-mgmt-btn:hover:not(:disabled){
+  background: rgba(30, 70, 120, 0.5);
+  border-color: rgba(120, 190, 255, 0.65);
+}.saas-admin .shop-mgmt-btn:disabled{
+  opacity: 0.5;
+  cursor: not-allowed;
+}.saas-admin .shop-mgmt-btn--danger{
+  border-color: rgba(220, 80, 80, 0.55);
+  color: #ffaaaa;
+  background: transparent;
+}.saas-admin .shop-mgmt-btn--danger:hover:not(:disabled){
+  background: rgba(120, 30, 30, 0.25);
+  border-color: rgba(255, 120, 120, 0.65);
+}.saas-admin .shop-mgmt-pager{
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 14px;
+  font-size: 13px;
+  color: #8aa4c8;
+}.saas-admin .shop-mgmt-page-header{
+  margin-bottom: 18px;
+}.saas-admin .shop-mgmt-page-title{
+  margin: 0 0 6px;
+  font-size: 20px;
+  font-weight: 700;
+  color: #e8f4ff;
+}.saas-admin .shop-mgmt-page-subtitle{
+  margin: 0;
+  font-size: 13px;
+  color: #8aa4c8;
+  line-height: 1.45;
+}.saas-admin .shop-mgmt-drawer-body{
+  flex: 1;
+  min-height: 0;
+  min-width: 0;
+  overflow: auto;
+  overflow-x: hidden;
+  padding: 16px 20px 28px;
+}.saas-admin /* 全屏 /shops：与 Dashboard 同一 war-room 容器 */
+.shop-mgmt-page.war-room{
+  width: 100%;
+}.saas-admin .shop-mgmt-main{
+  flex: 1 1 auto;
+  min-width: 0;
+  height: auto;
+  min-height: auto;
+  overflow: visible;
+  display: flex;
+  flex-direction: column;
+}.saas-admin .shop-mgmt-page-card{
+  flex: 0 1 auto;
+  height: auto;
+  min-height: auto;
+  overflow: visible;
+}.saas-admin .shop-mgmt-panel--shell .shop-mgmt-toolbar{
+  margin-top: 0;
+}.saas-admin .shop-mgmt-shell-header{
+  margin-bottom: 0;
+}.saas-admin .shop-mgmt-shell-row{
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px 20px;
+  width: 100%;
+}.saas-admin .shop-mgmt-shell-brand{
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 0;
+}.saas-admin .shop-mgmt-shell-back{
+  font-size: 13px;
+  color: #7ecbff;
+  text-decoration: none;
+  margin-bottom: 2px;
+}.saas-admin .shop-mgmt-shell-back:hover{
+  color: #b8e8ff;
+}.saas-admin .shop-mgmt-shell-title{
+  margin: 0;
+  font-size: clamp(18px, 2vw, 22px);
+  font-weight: 700;
+  color: #e8f4ff;
+  letter-spacing: 0.02em;
+}.saas-admin .shop-mgmt-shell-subtitle{
+  margin: 0;
+  font-size: 13px;
+  color: #8aa4c8;
+  line-height: 1.45;
+}.saas-admin .shop-mgmt-shell-actions{
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px;
+  margin-left: auto;
+}.saas-admin .shop-mgmt-shell-user{
+  font-size: 13px;
+  color: #b8d4ff;
+  max-width: 200px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}.saas-admin .shop-mgmt-shell-main{
+  flex: 1;
+  min-width: 0;
+  max-width: 100%;
+}.saas-admin .shop-mgmt-page .shop-panel-view--shops{
+  max-width: 100%;
+}.saas-admin .shop-mgmt-platform-actions{
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  align-items: center;
+  width: 100%;
+  padding-top: 4px;
+  border-top: 1px solid rgba(90, 160, 255, 0.12);
+  margin-top: 4px;
+}.saas-admin .analytics-page-root{
+  min-height: 0;
+}.saas-admin .analytics-page-card{
+  overflow: visible;
+}.saas-admin .analytics-main-grid{
+  display: grid;
+  grid-template-columns: minmax(260px, 1fr) minmax(260px, 1fr) minmax(280px, 1.12fr);
+  gap: 20px;
+  align-items: stretch;
+}.saas-admin .analytics-main-col{
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  min-width: 0;
+}.saas-admin .analytics-page .loading{
+  min-height: auto;
+}.saas-admin .analytics-trend-block{
+  width: 100%;
+}/* Analytics：整页可滚动；解除 ≥1366px 大屏对根节点与 .war-room 的 overflow:hidden 裁切 */
+html.analytics-route,
+html.analytics-route body,
+html.analytics-route #root{
+  height: auto !important;
+  min-height: 100%;
+  overflow-x: hidden;
+  overflow-y: auto !important;
+}html.analytics-route .war-room.analytics-page.analytics-page-root{
+  min-height: 100vh;
+  height: auto !important;
+  max-height: none !important;
+  overflow-x: hidden;
+  overflow-y: visible;
+  padding-bottom: 56px;
+  flex-shrink: 0;
+  gap: 20px;
+}html.analytics-route .analytics-trend-block{
+  flex-shrink: 0;
+}html.analytics-route .analytics-page-header{
+  flex-shrink: 0;
+}/* Analytics 顶栏：三列语义（左内容 | 弹性留白 | 右操作），避免两子项落入「中+右」列导致右侧空栏 */
+html.analytics-route .analytics-page-header.war-header.war-header--revamp{
+  padding: 6px 12px;
+  gap: 6px;
+}html.analytics-route .analytics-page-header .war-header-top{
+  display: grid;
+  grid-template-columns: max-content minmax(0, 1fr) max-content;
+  gap: 10px 16px;
+  align-items: center;
+  min-height: 0;
+}html.analytics-route .analytics-page-header .war-header-brand{
+  grid-column: 1;
+  justify-self: start;
+  flex-direction: column;
+  flex-wrap: nowrap;
+  align-items: flex-start;
+  gap: 2px;
+  max-width: min(100%, 520px);
+}html.analytics-route .analytics-page-header .war-header-brand h1{
+  font-size: clamp(17px, 1.35vw, 24px);
+  line-height: 1.2;
+}html.analytics-route .analytics-page-header .war-header-actions{
+  grid-column: 3;
+  justify-self: end;
+  min-width: 0;
+}html.analytics-route .analytics-header-actions{
+  flex-direction: column;
+  align-items: flex-end;
+  justify-content: center;
+  gap: 4px;
+}html.analytics-route .analytics-header-actions-row{
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 8px;
+}html.analytics-route .analytics-header-data-note{
+  font-size: 10px;
+  line-height: 1.2;
+  color: rgba(111, 158, 170, 0.55);
+  letter-spacing: 0.02em;
+  user-select: none;
+}html.analytics-route .analytics-page__filters{
+  position: sticky;
+  top: 0;
+  z-index: 60;
+  flex-shrink: 0;
+  margin-bottom: 0;
+  padding: 14px 16px 16px;
+  border-radius: 10px;
+  background: rgba(5, 28, 38, 0.94);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(0, 224, 255, 0.28);
+  box-shadow:
+    0 8px 32px rgba(0, 0, 0, 0.45),
+    0 0 0 1px rgba(0, 200, 255, 0.06) inset;
+}html.analytics-route .analytics-header-sub{
+  margin: 2px 0 0;
+  color: rgba(143, 163, 184, 0.88);
+  font-size: 13px;
+}html.analytics-route .analytics-back-btn{
+  margin-top: 4px;
+}html.analytics-route .analytics-user-pill{
+  margin-right: 0;
+  font-weight: 600;
+  color: rgba(217, 247, 255, 0.92);
+  font-size: 13px;
+}html.analytics-route .analytics-page-err{
+  padding: 10px 4px;
+}html.analytics-route .analytics-page-loading{
+  padding: 18px 8px;
+  font-size: 15px;
+  color: #9ee8ff;
+  letter-spacing: 0.04em;
+}html.analytics-route .analytics-filter-grid{
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 132px)) max-content;
+  gap: 12px 14px;
+  align-items: end;
+}html.analytics-route .analytics-filter-item--action{
+  min-width: 0;
+  justify-self: start;
+  flex: 0 0 auto;
+  width: auto;
+  max-width: 100%;
+}html.analytics-route .analytics-filter-item{
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 0;
+}html.analytics-route .analytics-filter-item .filter-cluster-title{
+  margin-bottom: 0;
+}html.analytics-route .analytics-filter-spacer{
+  visibility: hidden;
+  display: block;
+  min-height: 1em;
+}html.analytics-route .analytics-uni-select{
+  width: 100%;
+  min-width: 0;
+  height: 36px;
+  box-sizing: border-box;
+  padding: 6px 10px;
+}html.analytics-route .analytics-refresh-btn{
+  width: 96px;
+  max-width: 100%;
+  flex: 0 0 auto;
+  min-width: 0;
+  height: 36px;
+  box-sizing: border-box;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}html.analytics-route .analytics-refresh-btn:disabled{
+  opacity: 0.55;
+  cursor: wait;
+}html.analytics-route .analytics-search-row{
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  align-items: center;
+  margin-top: 14px;
+  padding-top: 14px;
+  border-top: 1px solid rgba(0, 166, 184, 0.14);
+}html.analytics-route .analytics-search-input{
+  flex: 1 1 240px;
+  min-width: min(100%, 200px);
+  max-width: min(480px, 100%);
+  height: 36px;
+  box-sizing: border-box;
+  padding: 0 12px;
+  border-radius: 8px;
+  border: 1px solid rgba(0, 224, 255, 0.28);
+  background: rgba(1, 19, 28, 0.88);
+  color: #e8f0ff;
+  font-size: 13px;
+}html.analytics-route .analytics-search-btn{
+  height: 36px;
+  box-sizing: border-box;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 88px;
+  padding-left: 16px;
+  padding-right: 16px;
+}html.analytics-route .analytics-page-content{
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  width: 100%;
+  min-width: 0;
+  min-height: 0;
+  flex: 1 1 auto;
+  position: relative;
+  overflow: hidden;
+}html.analytics-route .analytics-main-grid{
+  flex: 1 1 auto;
+  min-height: 0;
+  align-items: stretch;
+}html.analytics-route .analytics-data-refresh-overlay{
+  position: absolute;
+  inset: 0;
+  z-index: 30;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+  background: rgba(2, 11, 18, 0.42);
+  border-radius: 10px;
+}html.analytics-route .analytics-data-refresh-overlay__text{
+  font-size: 14px;
+  letter-spacing: 0.06em;
+  color: rgba(158, 232, 255, 0.92);
+  text-shadow: 0 0 12px rgba(0, 229, 255, 0.35);
+}html.analytics-route .analytics-main-col{
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  min-width: 0;
+  height: 100%;
+  align-self: stretch;
+}html.analytics-route .analytics-card{
+  border-radius: 10px;
+  min-height: 0;
+}/* 三列表统一卡片高度：内部滚动 + 底部分页 */
+html.analytics-route .analytics-table-card-h{
+  display: flex;
+  flex-direction: column;
+  min-height: 520px;
+  max-height: 620px;
+  height: 100%;
+  overflow: hidden;
+  flex: 1 1 auto;
+}html.analytics-route .analytics-card-stack{
+  display: flex;
+  flex-direction: column;
+  flex: 1 1 auto;
+  min-height: 0;
+  gap: 0;
+}html.analytics-route .analytics-table-scroll-y{
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow-x: auto;
+  overflow-y: auto;
+  margin: 0 -2px;
+}html.analytics-route .analytics-table-scroll-y thead th{
+  position: sticky;
+  top: 0;
+  z-index: 2;
+  background: rgba(5, 28, 38, 0.97);
+  box-shadow: 0 1px 0 rgba(0, 166, 184, 0.12);
+}html.analytics-route .analytics-pager{
+  flex: 0 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+  padding: 10px 8px 4px;
+  border-top: 1px solid rgba(0, 166, 184, 0.12);
+}html.analytics-route .analytics-pager-btn{
+  background: rgba(1, 19, 28, 0.75);
+  border: 1px solid rgba(0, 224, 255, 0.32);
+  color: #9ee8ff;
+  border-radius: 6px;
+  padding: 6px 14px;
+  font-size: 12px;
+  cursor: pointer;
+}html.analytics-route .analytics-pager-btn:hover:not(:disabled){
+  border-color: rgba(0, 229, 255, 0.65);
+  color: #d9f7ff;
+}html.analytics-route .analytics-pager-btn:disabled{
+  opacity: 0.4;
+  cursor: not-allowed;
+}html.analytics-route .analytics-pager-status{
+  font-size: 12px;
+  font-variant-numeric: tabular-nums;
+  color: rgba(143, 163, 184, 0.95);
+  min-width: 4.5em;
+  text-align: center;
+}/* 店铺排行 ≤30 条：隐藏分页文案与交互，占位高度与两侧分页栏一致，避免三列底部错位 */
+html.analytics-route .analytics-pager--layout-only{
+  visibility: hidden;
+  pointer-events: none;
+  user-select: none;
+}html.analytics-route .analytics-search-panel{
+  overflow: visible;
+  padding: 14px 16px 16px;
+}html.analytics-route .analytics-card-title{
+  margin: 0 0 12px;
+  font-size: 15px;
+  font-weight: 700;
+  color: #d9f7ff;
+  letter-spacing: 0.03em;
+  flex-shrink: 0;
+}html.analytics-route .analytics-card-title-row{
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px 14px;
+  margin-bottom: 12px;
+  flex-shrink: 0;
+}html.analytics-route .analytics-card-title-row .analytics-card-title{
+  margin: 0;
+}html.analytics-route .analytics-inline-seg{
+  display: inline-flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px 8px;
+}html.analytics-route .analytics-inline-seg__label{
+  font-size: 11px;
+  font-weight: 600;
+  color: rgba(111, 158, 170, 0.95);
+  letter-spacing: 0.04em;
+  margin-right: 2px;
+}html.analytics-route .analytics-inline-seg__label::after{
+  content: '：';
+}html.analytics-route .analytics-inline-seg__btn{
+  background: rgba(1, 19, 28, 0.75);
+  border: 1px solid rgba(0, 224, 255, 0.28);
+  color: #9ee8ff;
+  border-radius: 6px;
+  padding: 5px 12px;
+  font-size: 12px;
+  cursor: pointer;
+  line-height: 1.25;
+}html.analytics-route .analytics-inline-seg__btn:hover{
+  border-color: rgba(0, 229, 255, 0.55);
+  color: #d9f7ff;
+}html.analytics-route .analytics-inline-seg__btn--active{
+  border-color: rgba(0, 229, 255, 0.65);
+  color: #00f5e0;
+  background: rgba(0, 229, 255, 0.1);
+  box-shadow: 0 0 12px rgba(0, 229, 255, 0.12);
+}html.analytics-route .analytics-card--module-busy{
+  opacity: 0.78;
+  transition: opacity 0.15s ease;
+}html.analytics-route .analytics-trend-title-row{
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px 14px;
+  margin: 0 0 12px;
+  flex-shrink: 0;
+}html.analytics-route .analytics-trend-title-row__h{
+  margin: 0;
+  font-size: 15px;
+  font-weight: 700;
+  color: #d9f7ff;
+  letter-spacing: 0.03em;
+}html.analytics-route .analytics-table-wrap{
+  overflow-x: auto;
+  overflow-y: visible;
+  margin: 0 -2px;
+}html.analytics-route .analytics-table{
+  width: 100%;
+  table-layout: fixed;
+  border-collapse: collapse;
+  font-size: 12px;
+}html.analytics-route .analytics-table th,
+html.analytics-route .analytics-table td{
+  padding: 10px 8px;
+  border-bottom: 1px solid rgba(0, 166, 184, 0.1);
+  vertical-align: middle;
+}html.analytics-route .analytics-table thead th{
+  font-weight: 600;
+  color: rgba(126, 184, 200, 0.95);
+  font-size: 11px;
+  letter-spacing: 0.04em;
+  text-transform: none;
+}html.analytics-route .analytics-table .num{
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}html.analytics-route .analytics-th-rank{
+  width: 52px;
+  text-align: center;
+}html.analytics-route .analytics-th-market{
+  width: 76px;
+  text-align: center;
+}html.analytics-route .analytics-td-rank{
+  text-align: center;
+  vertical-align: middle;
+}html.analytics-route .analytics-rank-badge{
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 28px;
+  height: 28px;
+  padding: 0 6px;
+  border-radius: 8px;
+  font-weight: 800;
+  font-size: 12px;
+  color: rgba(200, 230, 255, 0.75);
+  background: rgba(0, 40, 56, 0.55);
+  border: 1px solid rgba(0, 166, 184, 0.2);
+}html.analytics-route .analytics-rank-badge--1{
+  color: #fff8e1;
+  border-color: rgba(255, 214, 120, 0.55);
+  background: linear-gradient(145deg, rgba(255, 200, 80, 0.22), rgba(40, 28, 8, 0.5));
+  box-shadow: 0 0 14px rgba(255, 200, 100, 0.18);
+}html.analytics-route .analytics-rank-badge--2{
+  color: #eaf4ff;
+  border-color: rgba(180, 210, 230, 0.45);
+  background: linear-gradient(145deg, rgba(160, 190, 210, 0.2), rgba(20, 32, 44, 0.55));
+  box-shadow: 0 0 10px rgba(180, 200, 220, 0.12);
+}html.analytics-route .analytics-rank-badge--3{
+  color: #ffe8d8;
+  border-color: rgba(210, 150, 110, 0.45);
+  background: linear-gradient(145deg, rgba(200, 120, 80, 0.18), rgba(36, 22, 16, 0.55));
+  box-shadow: 0 0 10px rgba(220, 140, 90, 0.12);
+}html.analytics-route .analytics-tr-fixed{
+  min-height: 56px;
+}html.analytics-route .analytics-td-product{
+  min-width: 0;
+}html.analytics-route .analytics-product-name{
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  overflow: hidden;
+  word-break: break-word;
+  line-height: 1.35;
+  color: rgba(232, 248, 255, 0.95);
+  font-weight: 600;
+}html.analytics-route .analytics-product-name--1l{
+  -webkit-line-clamp: 1;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  display: block;
+}html.analytics-route .analytics-sku-sub{
+  margin-top: 4px;
+  font-size: 11px;
+  line-height: 1.3;
+  color: rgba(111, 158, 170, 0.92);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}html.analytics-route .analytics-td-num{
+  color: rgba(200, 230, 240, 0.92);
+}html.analytics-route .analytics-td-gmv{
+  font-weight: 600;
+  color: #7df5e8;
+}html.analytics-route .analytics-td-shop{
+  min-width: 0;
+}html.analytics-route .analytics-shop-ellipsis{
+  display: block;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  color: rgba(225, 244, 255, 0.92);
+}html.analytics-route .analytics-td-market{
+  text-align: center;
+}html.analytics-route .analytics-market-pill{
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2px 10px;
+  border-radius: 6px;
+  border: 1px solid;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  background: rgba(0, 0, 0, 0.18);
+}html.analytics-route .analytics-market-pill--static{
+  cursor: default;
+}html.analytics-route .analytics-empty-cell{
+  text-align: center;
+  padding: 22px 12px !important;
+  color: rgba(111, 158, 170, 0.85);
+  border-bottom: none !important;
+}html.analytics-route .analytics-td-mono{
+  font-size: 11px;
+  font-variant-numeric: tabular-nums;
+  color: rgba(158, 201, 216, 0.88);
+  word-break: break-all;
+}html.analytics-route .analytics-search-results{
+  margin-top: 4px;
+}html.analytics-route .analytics-search-title{
+  margin: 0 0 10px;
+  font-size: 13px;
+  font-weight: 600;
+  color: rgba(158, 232, 255, 0.85);
+}/* 最近订单：表头固定在上，数据区纵向滚动；与行共用 grid 列宽 */
+html.analytics-route .analytics-recent-card-inner{
+  display: flex;
+  flex-direction: column;
+  flex: 1 1 auto;
+  min-height: 0;
+}html.analytics-route .analytics-recent-grid-wrap{
+  min-width: 568px;
+  width: max-content;
+  max-width: none;
+}html.analytics-route .analytics-recent-rows-scroll{
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow-x: auto;
+  overflow-y: auto;
+  scrollbar-gutter: stable;
+}html.analytics-route .analytics-recent-grid--head{
+  position: static;
+  flex-shrink: 0;
+  background: rgba(5, 28, 38, 0.96);
+  border-bottom: 1px solid rgba(0, 224, 255, 0.28);
+  min-height: 36px;
+}html.analytics-route .analytics-recent-grid{
+  display: grid;
+  grid-template-columns: 100px 140px 64px 128px 56px 80px;
+  align-items: center;
+  box-sizing: border-box;
+}html.analytics-route .analytics-recent-grid--head .analytics-recent-cell{
+  font-size: 11px;
+  font-weight: 600;
+  color: rgba(126, 184, 200, 0.95);
+  padding: 8px 6px;
+}html.analytics-route .analytics-recent-row{
+  min-height: 44px;
+  border-bottom: 1px solid rgba(0, 166, 184, 0.1);
+  font-size: 12px;
+}html.analytics-route .analytics-recent-cell{
+  box-sizing: border-box;
+  min-width: 0;
+  padding: 8px 6px;
+}html.analytics-route .analytics-recent-cell--id{
+  font-variant-numeric: tabular-nums;
+  color: rgba(158, 201, 216, 0.9);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}html.analytics-route .analytics-recent-cell--shop{
+  min-width: 0;
+}html.analytics-route .analytics-recent-cell--market{
+  display: flex;
+  justify-content: center;
+}html.analytics-route .analytics-recent-cell--stack{
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  justify-content: center;
+  gap: 2px;
+  text-align: right;
+}html.analytics-route .analytics-amt-native{
+  font-variant-numeric: tabular-nums;
+  color: rgba(232, 248, 255, 0.94);
+  font-weight: 600;
+}html.analytics-route .analytics-amt-usd{
+  font-size: 11px;
+  font-variant-numeric: tabular-nums;
+  color: rgba(125, 245, 232, 0.88);
+}html.analytics-route .analytics-recent-cell--num{
+  display: flex;
+  justify-content: flex-end;
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}html.analytics-route .analytics-items-inline{
+  display: inline-flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 4px;
+  flex-wrap: nowrap;
+}html.analytics-route .analytics-multi-tag{
+  flex-shrink: 0;
+  font-size: 9px;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  color: #d8b45a;
+  border: 1px solid rgba(216, 180, 90, 0.4);
+  border-radius: 4px;
+  padding: 1px 4px;
+}html.analytics-route .analytics-recent-cell--time{
+  font-variant-numeric: tabular-nums;
+  color: rgba(158, 201, 216, 0.88);
+}html.analytics-route .analytics-recent-row--large .analytics-recent-cell{
+  box-shadow: inset 0 0 0 1px rgba(0, 229, 255, 0.22);
+}html.analytics-route .analytics-recent-grid--empty{
+  border-bottom: 1px solid rgba(0, 166, 184, 0.08);
+}html.analytics-route .analytics-recent-cell--empty-span{
+  grid-column: 1 / -1;
+  text-align: center;
+  padding: 20px 12px;
+  color: rgba(111, 158, 170, 0.85);
+}html.analytics-route .analytics-page .analytics-trend-block.chart-panel.analytics-card--trend{
+  flex: 0 0 auto;
+  min-height: 0;
+  max-height: none;
+  overflow: visible;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}html.analytics-route .analytics-trend-block .gmv-compare-trend-inner.gmv-compare-trend-inner--analytics{
+  flex: 0 0 auto;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+}html.analytics-route .analytics-trend-block .gmv-compare-chart-area--analytics{
+  height: 380px !important;
+  min-height: 380px !important;
+  max-height: 380px !important;
+  flex: 0 0 380px !important;
+  width: 100%;
+  position: relative;
+  overflow: hidden !important;
+}html.analytics-route .analytics-trend-block .recharts-wrapper,
+html.analytics-route .analytics-trend-block .recharts-surface{
+  overflow: visible !important;
+}
+
+/* /shops 滚动与布局：仅见 shops-page.css（html.shops-route） */
+

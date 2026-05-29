@@ -1,0 +1,506 @@
+/* Dashboard Shell — sidebar / topbar / content-shell / page-shell */
+
+html:has(.saas-admin),
+html:has(.saas-admin) body,
+html:has(.saas-admin) #root {
+  height: 100%;
+  max-height: 100%;
+  overflow: hidden;
+}
+
+.saas-admin {
+  height: 100vh;
+  max-height: 100vh;
+  overflow: hidden;
+}
+
+.saas-admin .dashboard-shell,
+.saas-admin .saas-shell {
+  display: flex;
+  height: 100vh;
+  max-height: 100vh;
+  min-height: 0;
+  overflow: hidden;
+  background: var(--admin-shell-bg);
+  color: var(--admin-text);
+}
+
+/* —— Sidebar —— */
+.saas-admin .dashboard-sidebar {
+  width: var(--admin-sidebar-width);
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  max-height: 100vh;
+  overflow: hidden;
+  border-right: 1px solid var(--admin-border-subtle);
+  background: var(--admin-sidebar-bg);
+}
+
+.saas-admin .dashboard-sidebar__brand {
+  display: flex;
+  align-items: center;
+  gap: var(--admin-spacing-sm);
+  padding: var(--admin-spacing-lg) var(--admin-spacing-md);
+  border-bottom: 1px solid var(--admin-border-subtle);
+  flex-shrink: 0;
+}
+
+.saas-admin .dashboard-sidebar__quick {
+  flex-shrink: 0;
+  padding: var(--admin-spacing-sm) var(--admin-spacing-sm) var(--admin-spacing-md);
+  border-bottom: 1px solid var(--admin-border-subtle);
+}
+
+.saas-admin .dashboard-sidebar__link--dashboard {
+  font-weight: 600;
+  color: #93c5fd;
+  border-color: rgba(59, 130, 246, 0.22);
+  background: rgba(59, 130, 246, 0.08);
+}
+
+.saas-admin .dashboard-sidebar__logo {
+  width: 36px;
+  height: 36px;
+  border-radius: var(--admin-radius-md);
+  background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
+  box-shadow: 0 0 20px var(--admin-accent-glow);
+  flex-shrink: 0;
+}
+
+.saas-admin .dashboard-sidebar__title {
+  display: block;
+  font-size: var(--admin-font-md);
+  font-weight: 600;
+  color: var(--admin-text);
+  line-height: var(--admin-line-tight);
+}
+
+.saas-admin .dashboard-sidebar__sub {
+  display: block;
+  font-size: var(--admin-font-xs);
+  color: var(--admin-text-muted);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  margin-top: 2px;
+}
+
+.saas-admin .dashboard-sidebar__nav {
+  flex: 1;
+  min-height: 0;
+  overflow-x: hidden;
+  overflow-y: auto;
+  padding: var(--admin-spacing-md) var(--admin-spacing-sm);
+}
+
+.saas-admin .dashboard-sidebar__group {
+  margin-bottom: var(--admin-spacing-lg);
+}
+
+.saas-admin .dashboard-sidebar__group-label {
+  padding: 0 var(--admin-spacing-sm) var(--admin-spacing-xs);
+  font-size: var(--admin-font-xs);
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--admin-text-subtle);
+}
+
+.saas-admin .dashboard-sidebar__list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.saas-admin .dashboard-sidebar__link {
+  display: flex;
+  align-items: center;
+  gap: var(--admin-spacing-sm);
+  padding: 10px var(--admin-spacing-sm);
+  border-radius: var(--admin-radius-md);
+  font-size: var(--admin-font-md);
+  color: var(--admin-text-muted);
+  text-decoration: none;
+  border: 1px solid transparent;
+  transition: background 0.15s, color 0.15s, border-color 0.15s, box-shadow 0.15s;
+}
+
+.saas-admin .dashboard-sidebar__link:hover {
+  background: rgba(255, 255, 255, 0.05);
+  color: var(--admin-text);
+}
+
+.saas-admin .dashboard-sidebar__link--active {
+  background: var(--admin-accent-muted);
+  border-color: rgba(59, 130, 246, 0.35);
+  color: #93c5fd;
+  font-weight: 600;
+  box-shadow: 0 0 0 1px rgba(59, 130, 246, 0.12) inset;
+}
+
+.saas-admin .dashboard-sidebar__link--active .saas-sidebar-icon {
+  color: #60a5fa;
+}
+
+.saas-admin .dashboard-sidebar__link--cta {
+  color: #fbbf24;
+  border-color: rgba(251, 191, 36, 0.25);
+  background: rgba(251, 191, 36, 0.08);
+}
+
+.saas-admin .dashboard-sidebar__link--muted {
+  opacity: 0.75;
+  font-size: var(--admin-font-sm);
+}
+
+.saas-admin .saas-sidebar-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 20px;
+  height: 20px;
+  flex-shrink: 0;
+  color: inherit;
+  opacity: 0.85;
+}
+
+.saas-admin .saas-sidebar-icon svg {
+  width: 18px;
+  height: 18px;
+}
+
+.saas-admin .dashboard-sidebar__link-text {
+  line-height: var(--admin-line-tight);
+}
+
+/* —— Main column —— */
+.saas-admin .dashboard-shell__main,
+.saas-admin .saas-main {
+  flex: 1;
+  min-width: 0;
+  min-height: 0;
+  height: 100vh;
+  max-height: 100vh;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  background: var(--admin-shell-bg);
+}
+
+/* —— Topbar —— */
+.saas-admin .dashboard-topbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--admin-spacing-md) var(--admin-spacing-lg);
+  padding: var(--admin-spacing-md) var(--admin-content-pad-x);
+  border-bottom: 1px solid var(--admin-border-subtle);
+  background: rgba(12, 18, 32, 0.85);
+  backdrop-filter: blur(8px);
+  flex-shrink: 0;
+  position: sticky;
+  top: 0;
+  z-index: 30;
+}
+
+.saas-admin .dashboard-topbar__lead {
+  flex: 1 1 280px;
+  min-width: 0;
+}
+
+.saas-admin .dashboard-topbar__breadcrumb ol {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px;
+  list-style: none;
+  margin: 0 0 6px;
+  padding: 0;
+  font-size: var(--admin-font-xs);
+  color: var(--admin-text-subtle);
+}
+
+.saas-admin .dashboard-topbar__breadcrumb a {
+  color: var(--admin-text-muted);
+  text-decoration: none;
+}
+
+.saas-admin .dashboard-topbar__breadcrumb a:hover {
+  color: #93c5fd;
+}
+
+.saas-admin .dashboard-topbar__sep {
+  margin: 0 2px;
+  opacity: 0.5;
+}
+
+.saas-admin .dashboard-topbar__title {
+  margin: 0;
+  font-size: var(--admin-font-2xl);
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  line-height: var(--admin-line-tight);
+  color: var(--admin-text);
+}
+
+.saas-admin .dashboard-topbar__actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--admin-spacing-sm);
+  flex-shrink: 0;
+  padding-top: 4px;
+}
+
+.saas-admin .dashboard-topbar__status {
+  padding: 6px 12px;
+  border-radius: 999px;
+  font-size: var(--admin-font-xs);
+  font-weight: 500;
+  border: 1px solid var(--admin-border);
+  background: rgba(15, 23, 42, 0.6);
+  color: var(--admin-text-muted);
+}
+
+.saas-admin .dashboard-topbar__status--ok {
+  border-color: rgba(34, 197, 94, 0.35);
+  background: rgba(34, 197, 94, 0.12);
+  color: #86efac;
+}
+
+.saas-admin .dashboard-topbar__status--error {
+  border-color: rgba(248, 113, 113, 0.35);
+  background: rgba(248, 113, 113, 0.1);
+  color: #fca5a5;
+}
+
+.saas-admin .dashboard-topbar__clock {
+  font-size: var(--admin-font-sm);
+  font-variant-numeric: tabular-nums;
+  color: var(--admin-text-muted);
+  white-space: nowrap;
+}
+
+.saas-admin .dashboard-topbar__user {
+  max-width: 160px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: var(--admin-font-sm);
+  color: #cbd5e1;
+  padding: 0 4px;
+}
+
+.saas-admin .dashboard-topbar__locale .locale-select {
+  min-height: 36px;
+  height: 36px;
+  font-size: var(--admin-font-sm);
+}
+
+.saas-admin .dashboard-topbar__refresh {
+  font-size: var(--admin-font-sm);
+}
+
+/* —— Content shell —— */
+.saas-admin .dashboard-shell__content,
+.saas-admin .saas-main-content {
+  flex: 1;
+  min-height: 0;
+  height: 100%;
+  overflow-x: hidden;
+  overflow-y: auto;
+}
+
+.saas-admin .content-shell {
+  min-height: 0;
+  padding: var(--admin-content-pad-y) var(--admin-content-pad-x);
+  box-sizing: border-box;
+}
+
+.saas-admin .content-shell__surface {
+  width: 100%;
+  max-width: var(--admin-content-max-width);
+  margin: 0 auto;
+  min-height: 0;
+  padding: var(--admin-spacing-lg);
+  border-radius: var(--admin-radius-xl);
+  border: 1px solid var(--admin-border);
+  background: var(--admin-content-bg);
+  box-shadow: var(--admin-shadow-md);
+  box-sizing: border-box;
+}
+
+.saas-admin .content-shell__inner {
+  min-width: 0;
+  width: 100%;
+}
+
+/* —— 数据总览（SaaS 嵌入） —— */
+.saas-admin .analytics-saas-embed {
+  width: 100%;
+  min-width: 0;
+}
+
+.saas-admin .analytics-saas-embed .analytics-page-main {
+  width: 100%;
+  min-width: 0;
+}
+
+.saas-admin .analytics-saas-embed .analytics-page-card {
+  width: 100%;
+  max-width: none;
+  padding: 0;
+  border: none;
+  background: transparent;
+  box-shadow: none;
+}
+
+.saas-admin .analytics-saas-embed .analytics-page-root {
+  width: 100%;
+  min-width: 0;
+}
+
+.saas-admin .analytics-saas-embed .analytics-page__filters {
+  width: 100%;
+  position: static;
+  margin-bottom: var(--admin-spacing-md);
+}
+
+.saas-admin .analytics-saas-embed .analytics-filter-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(148px, 1fr));
+  gap: var(--admin-spacing-sm) var(--admin-spacing-md);
+  align-items: end;
+  width: 100%;
+}
+
+.saas-admin .analytics-saas-embed .analytics-search-row {
+  width: 100%;
+  margin-top: var(--admin-spacing-sm);
+}
+
+.saas-admin .analytics-saas-embed .analytics-page-content {
+  width: 100%;
+  min-width: 0;
+  overflow: visible;
+}
+
+.saas-admin .analytics-saas-embed .analytics-main-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: var(--admin-spacing-lg);
+  width: 100%;
+  align-items: stretch;
+}
+
+.saas-admin .analytics-saas-embed .analytics-main-col {
+  min-width: 0;
+  width: 100%;
+}
+
+.saas-admin .analytics-saas-embed .analytics-trend-block {
+  width: 100%;
+}
+
+.saas-admin .analytics-saas-embed .analytics-table-card-h {
+  display: flex;
+  flex-direction: column;
+  min-height: 400px;
+  max-height: 560px;
+  overflow: hidden;
+}
+
+.saas-admin .analytics-saas-embed .analytics-card-stack {
+  display: flex;
+  flex-direction: column;
+  flex: 1 1 auto;
+  min-height: 0;
+}
+
+.saas-admin .analytics-saas-embed .analytics-table-scroll-y {
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow-x: auto;
+  overflow-y: auto;
+}
+
+.saas-admin .analytics-saas-embed .analytics-table-scroll-y thead th {
+  position: sticky;
+  top: 0;
+  z-index: 2;
+  background: rgba(15, 23, 42, 0.97);
+}
+
+@media (max-width: 1280px) {
+  .saas-admin .analytics-saas-embed .analytics-main-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* —— Page shell —— */
+.saas-admin .page-shell,
+.saas-admin .admin-page-shell {
+  max-width: none;
+  margin: 0;
+  padding: 0;
+  overflow-x: hidden;
+}
+
+.saas-admin .admin-page-header {
+  margin-bottom: var(--admin-spacing-lg);
+  padding-bottom: var(--admin-spacing-md);
+  border-bottom: 1px solid var(--admin-border-subtle);
+}
+
+.saas-admin .admin-page-header__title {
+  display: none;
+}
+
+.saas-admin .page-shell .admin-page-header__title {
+  display: block;
+}
+
+.saas-admin .admin-page-header--saas .admin-page-header__title {
+  display: none;
+}
+
+@media (max-width: 768px) {
+  .saas-admin .dashboard-shell,
+  .saas-admin .saas-shell {
+    flex-direction: column;
+    height: 100vh;
+    max-height: 100vh;
+  }
+
+  .saas-admin .dashboard-sidebar {
+    width: 100%;
+    height: auto;
+    max-height: 42vh;
+  }
+
+  .saas-admin .dashboard-shell__main,
+  .saas-admin .saas-main {
+    height: auto;
+    flex: 1;
+    min-height: 0;
+  }
+
+  .saas-admin .dashboard-topbar {
+    padding-left: var(--admin-spacing-md);
+    padding-right: var(--admin-spacing-md);
+  }
+
+  .saas-admin .content-shell {
+    padding: var(--admin-spacing-md);
+  }
+
+  .saas-admin .content-shell__surface {
+    padding: var(--admin-spacing-md);
+    border-radius: var(--admin-radius-lg);
+  }
+}

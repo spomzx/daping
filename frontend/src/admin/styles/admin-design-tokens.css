@@ -1,0 +1,65 @@
+/* SaaS Dashboard — 统一 Design Tokens（仅挂在 .saas-admin） */
+
+.saas-admin {
+  /* Spacing */
+  --admin-spacing-xs: 6px;
+  --admin-spacing-sm: 10px;
+  --admin-spacing-md: 16px;
+  --admin-spacing-lg: 24px;
+  --admin-spacing-xl: 32px;
+  --admin-spacing-2xl: 40px;
+
+  /* Radius */
+  --admin-radius-sm: 8px;
+  --admin-radius-md: 12px;
+  --admin-radius-lg: 16px;
+  --admin-radius-xl: 20px;
+
+  /* Surfaces */
+  --admin-shell-bg: #080c14;
+  --admin-content-bg: #0c1220;
+  --admin-content-bg-elevated: #111827;
+  --admin-card-bg: linear-gradient(165deg, rgba(17, 24, 39, 0.92) 0%, rgba(10, 15, 28, 0.88) 100%);
+  --admin-card-bg-flat: rgba(15, 23, 42, 0.72);
+  --admin-sidebar-bg: linear-gradient(180deg, #121a2a 0%, #0e141f 100%);
+
+  /* Border */
+  --admin-border: rgba(148, 163, 184, 0.14);
+  --admin-border-strong: rgba(96, 165, 250, 0.22);
+  --admin-border-subtle: rgba(255, 255, 255, 0.06);
+
+  /* Shadow */
+  --admin-shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.12);
+  --admin-shadow-md: 0 8px 24px rgba(0, 0, 0, 0.2);
+  --admin-shadow-card: 0 1px 0 rgba(255, 255, 255, 0.04) inset, 0 10px 32px rgba(0, 0, 0, 0.22);
+
+  /* Typography */
+  --admin-font-xs: 0.75rem;
+  --admin-font-sm: 0.8125rem;
+  --admin-font-md: 0.875rem;
+  --admin-font-lg: 1rem;
+  --admin-font-xl: 1.25rem;
+  --admin-font-2xl: 1.5rem;
+  --admin-line-tight: 1.25;
+  --admin-line-normal: 1.55;
+  --admin-text: #f1f5f9;
+  --admin-text-muted: #94a3b8;
+  --admin-text-subtle: #64748b;
+
+  /* Density */
+  --admin-control-height: 40px;
+  --admin-table-head-height: 48px;
+  --admin-table-row-height: 52px;
+  --admin-stat-card-min-height: 100px;
+  --admin-sidebar-width: 248px;
+
+  /* Layout */
+  --admin-content-max-width: 1520px;
+  --admin-content-pad-x: 32px;
+  --admin-content-pad-y: 28px;
+
+  /* Accent */
+  --admin-accent: #3b82f6;
+  --admin-accent-muted: rgba(59, 130, 246, 0.15);
+  --admin-accent-glow: rgba(59, 130, 246, 0.35);
+}
