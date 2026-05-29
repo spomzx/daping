@@ -476,6 +476,98 @@ function scanAnalyticsAuthorityStatus() {
   };
 }
 
+function scanDashboardCacheUnifiedStatus() {
+  const servicePath = path.join(BACKEND, 'modules', 'dashboard', 'cache', 'dashboardCacheService.js');
+  const dashboardCacheText = readText('backend/lib/dashboardCache.js') || '';
+  const readonlyCacheText = readText('backend/lib/dashboardReadonlyCache.js') || '';
+  const tableCacheText = readText('backend/lib/dashboardTableCache.js') || '';
+
+  const saasApiRoots = [
+    path.join(BACKEND, 'modules'),
+    path.join(BACKEND, 'routes'),
+    path.join(BACKEND, 'services'),
+    path.join(BACKEND, 'middlewares'),
+  ];
+  const legacyJsonPatterns = [
+    { id: 'orders-cache.json', re: /orders-cache\.json/ },
+    { id: 'gmv-cache.json', re: /gmv-cache\.json/ },
+    { id: 'shops.json', re: /shops\.json/ },
+  ];
+  const SAAS_JSON_READ_EXCLUDE_FILES = [
+    'backend/modules/shops/importCacheShops.js',
+    'backend/modules/orders/orderCacheRebuildService.js',
+    'backend/modules/orders/orderReconcileService.js',
+    'backend/modules/shops/oauthMysqlPersist.js',
+    'backend/modules/shops/shopHealthService.js',
+  ];
+  const saasJsonReads = [];
+  for (const root of saasApiRoots) {
+    if (!fs.existsSync(root)) continue;
+    for (const file of walkFiles(root)) {
+      if (file.includes(`${path.sep}legacy-quarantine${path.sep}`)) continue;
+      const relFile = rel(file);
+      if (SAAS_JSON_READ_EXCLUDE_FILES.includes(relFile)) continue;
+      if (/README\.md$/.test(relFile)) continue;
+      const text = fs.readFileSync(file, 'utf8');
+      for (const pat of legacyJsonPatterns) {
+        if (!pat.re.test(text)) continue;
+        const lines = text.split('\n');
+        lines.forEach((line, i) => {
+          if (!pat.re.test(line)) return;
+          const trimmed = line.trim();
+          if (/^\*|^\/\//.test(trimmed)) return;
+          if (!/readJson|readFileSync|readJsonWithRecovery|readJsonSafe|createReadStream/.test(line)) return;
+          if (/禁止|不读|deprecated|legacy worker|ops only|410|LOCKED/i.test(line)) return;
+          saasJsonReads.push({
+            pattern: pat.id,
+            file: relFile,
+            line: i + 1,
+            snippet: trimmed.slice(0, 120),
+          });
+        });
+      }
+    }
+  }
+
+  const snapshotInPrimaryRead =
+    /readDashboardSnapshotCache/.test(dashboardCacheText) ||
+    /readDashboardSnapshotCache/.test(readonlyCacheText);
+
+  const withDashboardUsesService =
+    /dashboardCacheService/.test(dashboardCacheText) &&
+    /getDashboardCache/.test(dashboardCacheText);
+
+  const cacheTablesPresent =
+    /dashboard_summary_cache/.test(tableCacheText) &&
+    /dashboard_shop_ranking_cache/.test(tableCacheText) &&
+    /dashboard_product_ranking_cache/.test(tableCacheText) &&
+    /dashboard_trend_cache/.test(tableCacheText);
+
+  const unifiedLogPresent =
+    /CACHE_HIT_MEMORY/.test(readText('backend/modules/dashboard/cache/dashboardCacheService.js') || '') &&
+    /CACHE_HIT_TABLE/.test(readText('backend/modules/dashboard/cache/dashboardCacheService.js') || '') &&
+    /CACHE_MISS/.test(readText('backend/modules/dashboard/cache/dashboardCacheService.js') || '') &&
+    /CACHE_REFRESH/.test(readText('backend/modules/dashboard/cache/dashboardCacheService.js') || '') &&
+    /CACHE_STALE/.test(readText('backend/modules/dashboard/cache/dashboardCacheService.js') || '');
+
+  return {
+    dashboardCacheServiceExists: fs.existsSync(servicePath),
+    withDashboardCacheUsesDashboardCacheService: withDashboardUsesService,
+    snapshotExcludedFromPrimaryReadPath: !snapshotInPrimaryRead,
+    legacyJsonNotReadBySaasApi: saasJsonReads.length === 0,
+    legacyJsonSaasReadSamples: saasJsonReads.slice(0, 15),
+    dashboardMysqlCacheTablesRetained: cacheTablesPresent,
+    unifiedCacheLogEventsPresent: unifiedLogPresent,
+    pass:
+      fs.existsSync(servicePath) &&
+      withDashboardUsesService &&
+      !snapshotInPrimaryRead &&
+      saasJsonReads.length === 0 &&
+      cacheTablesPresent &&
+      unifiedLogPresent,
+  };
+}
+
 function scanFrontendQueryAuthorityStatus() {
   const storeFile = path.join(ROOT, 'frontend', 'src', 'stores', 'dashboardQueryStore.ts');
   const targets = [
@@ -541,6 +633,7 @@ function main() {
   const frontendApiServiceCoverage = scanFrontendApiServiceCoverage(frontendDirectApiCalls);
   const frontendQueryAuthorityStatus = scanFrontendQueryAuthorityStatus();
   const analyticsAuthorityStatus = scanAnalyticsAuthorityStatus();
+  const dashboardCacheUnifiedStatus = scanDashboardCacheUnifiedStatus();
   const serverJsBusinessRouteCount = serverJsBusinessRoutes.filter((r) => r.category !== 'infra').length;
 
   const missingDocs = REQUIRED_DOCS.filter((d) => !fs.existsSync(path.join(ROOT, d)));
@@ -586,6 +679,7 @@ function main() {
     frontendApiServiceCoverage,
     frontendQueryAuthorityStatus,
     analyticsAuthorityStatus,
+    dashboardCacheUnifiedStatus,
     serverJsBusinessRouteCount,
     p1Pass,
     docsPresent: REQUIRED_DOCS.filter((d) => fs.existsSync(path.join(ROOT, d))),

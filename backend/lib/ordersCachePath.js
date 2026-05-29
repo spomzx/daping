@@ -5,6 +5,7 @@ const fs = require('fs');
 const { storageDir } = require('./storageFile');
 
 const STORAGE_DIR = storageDir();
+/** @deprecated legacy worker only — SaaS API 禁止读取 orders-cache.json */
 const ORDERS_CACHE_PATH = path.join(STORAGE_DIR, 'orders-cache.json');
 
 function cacheFileStats() {

@@ -2,13 +2,7 @@
 
 const { recordDashboardRequest } = require('./dashboardSlowCollector');
 const { logDashboardPerfProbe } = require('./dashboardPerfProbe');
-const {
-  readDashboardTableCache,
-  readTrendTableStaleByDimensions,
-  writeDashboardTableCache,
-  isTableCacheEnabled,
-  tableTtlMs,
-} = require('./dashboardTableCache');
+const { writeDashboardTableCache, isTableCacheEnabled, tableTtlMs } = require('./dashboardTableCache');
 const { isTrendCacheEndpoint, trendCacheTtlMs } = require('./dashboardTrendTtl');
 const {
   stampTrendCacheMeta,
@@ -16,14 +10,9 @@ const {
   trendPayloadIsEmpty,
 } = require('./dashboardTrendCacheMeta');
 const {
-  isSnapshotCacheEnabled,
-  readDashboardSnapshotCache,
-  writeDashboardSnapshotCache,
-  snapshotTtlMs,
   snapshotNearExpiryRemainingMs,
-  shouldPersistSnapshot,
-  isSnapshotEndpoint,
 } = require('./dashboardSnapshotCache');
+const dashboardCacheService = require('../modules/dashboard/cache/dashboardCacheService');
 const {
   isDashboardApiReadonly,
   isPrecomputePipelineRequest,
@@ -35,8 +24,7 @@ const {
   purgeMemCacheLegacyPaidTrend,
 } = require('./dashboardTrendCache');
 
-/** @type {Map<string, { exp: number, val: unknown, ttlMs: number }>} */
-const memCache = new Map();
+const { memCache } = dashboardCacheService;
 
 /** 趋势端点后台回填（cache miss 时不阻塞 HTTP） */
 /** @type {Map<string, Promise<unknown>>} */
@@ -171,30 +159,14 @@ function persistDashboardCaches(opts) {
     val,
     refreshSource,
   });
-  syncDashboardSnapshotWrite({
-    endpoint,
-    tenantId,
-    contract,
-    extra,
-    cacheKey,
-    val,
-    rowsPick,
-  });
 }
 
 /**
- * memory/table/db 任意命中后同步回写 snapshot（有数据才写）
+ * @deprecated Snapshot is no longer part of SaaS dashboard primary cache path.
+ * memory/table/db 任意命中后同步回写 snapshot（有数据才写）— 主链路已停用。
  */
-function syncDashboardSnapshotWrite(opts) {
-  const { endpoint, tenantId, contract, extra, cacheKey, val, rowsPick } = opts;
-  if (!isSnapshotCacheEnabled() || !isSnapshotEndpoint(endpoint)) return;
-  if (val == null) return;
-  if (!shouldPersistSnapshot(endpoint, val, rowsPick)) return;
-  void writeDashboardSnapshotCache(
-    { endpoint, tenantId, contract, extra, cacheKey },
-    val,
-    snapshotTtlMs(contract),
-  );
+function syncDashboardSnapshotWrite(_opts) {
+  /* P1-C.3: snapshot write removed from SaaS primary cache path */
 }
 
 /** @alias syncDashboardSnapshotWrite */
@@ -226,6 +198,10 @@ function scheduleDashboardBackgroundRefresh(opts) {
         refreshSource,
         rowsPick,
       });
+      dashboardCacheService.logCacheEvent(
+        'CACHE_REFRESH',
+        dashboardCacheService.metaFromContract(contract, cacheKey, endpoint),
+      );
       const empty = trendPayloadIsEmpty(endpoint, val, rowsPick, pointsPick);
       const cacheSource = empty ? 'db-empty' : 'db';
       const reason = empty ? 'no_trend_data' : '';
@@ -259,23 +235,6 @@ const scheduleTrendBackgroundRefresh = scheduleDashboardBackgroundRefresh;
  *   cacheKey: string,
  * }} ctx
  */
-async function readSnapshotLayers(ctx) {
-  if (!isSnapshotCacheEnabled()) {
-    return { fresh: { hit: false, logSource: 'snapshot-miss' }, stale: { hit: false, logSource: 'snapshot-miss' } };
-  }
-  const q = {
-    endpoint: ctx.endpoint,
-    tenantId: ctx.tenantId,
-    contract: ctx.contract,
-    extra: ctx.extra,
-    cacheKey: ctx.cacheKey,
-  };
-  const fresh = await readDashboardSnapshotCache(q, { allowStale: false });
-  if (fresh.hit) return { fresh, stale: { hit: false, logSource: 'snapshot-miss' } };
-  const stale = await readDashboardSnapshotCache(q, { allowStale: true });
-  return { fresh, stale };
-}
-
 /**
  * dashboard:{endpoint}:{tenant}:{shop}:{market}:{orderFilter}:{timeRange}:{start}:{end}[:extra]
  * @param {string} endpoint
@@ -330,17 +289,11 @@ function resolveRefreshSource(q) {
 }
 
 function cacheGet(key) {
-  const e = memCache.get(key);
-  if (!e) return { hit: false, val: undefined, ttlMs: 0 };
-  if (Date.now() > e.exp) {
-    memCache.delete(key);
-    return { hit: false, val: undefined, ttlMs: e.ttlMs };
-  }
-  return { hit: true, val: e.val, ttlMs: e.ttlMs };
+  return dashboardCacheService.memoryGet(key);
 }
 
 function cacheSet(key, val, ttlMs) {
-  memCache.set(key, { val, exp: Date.now() + ttlMs, ttlMs });
+  dashboardCacheService.memorySet(key, val, ttlMs);
 }
 
 /**
@@ -448,7 +401,6 @@ async function withDashboardCache(opts) {
       probeBase,
       cacheGet,
       cacheSet,
-      warmDashboardSnapshot,
       logDashboardCacheLine,
     });
   }
@@ -566,147 +518,6 @@ async function withDashboardCache(opts) {
     return /** @type {T} */ (val);
   };
 
-  const snapshotCtx = { endpoint, tenantId, contract, extra, cacheKey };
-
-  /**
-   * @param {'fresh'|'stale'|'both'} [mode]
-   */
-  const snapshotQuery = {
-    endpoint: snapshotCtx.endpoint,
-    tenantId: snapshotCtx.tenantId,
-    contract: snapshotCtx.contract,
-    extra: snapshotCtx.extra,
-    cacheKey: snapshotCtx.cacheKey,
-  };
-
-  const returnSnapshotTrendHit = (snap, /** @type {boolean} */ scheduleRefresh) => {
-    const fileStale = snap.logSource === 'snapshot-stale' || snap.stale === true;
-    const nearExpiry = isNearExpiryRemaining(snap.ttlMs ?? 0, contract);
-    const isStale = fileStale || nearExpiry || scheduleRefresh;
-    const src = isStale ? 'snapshot-stale' : 'snapshot';
-    const memTtl =
-      snap.ttlMs != null && snap.ttlMs > 0
-        ? Math.max(snapshotNearExpiryRemainingMs(contract), snap.ttlMs)
-        : ttlMs;
-    cacheSet(cacheKey, snap.val, memTtl);
-    if (isStale) {
-      scheduleDashboardBackgroundRefresh({
-        cacheKey,
-        endpoint,
-        tenantId,
-        contract,
-        extra,
-        ttlMs,
-        refreshSource,
-        loader,
-        rowsPick,
-        pointsPick,
-      });
-    }
-    return emitTrendResult(src, snap.val, memTtl, {
-      stale: isStale,
-      refreshPending: isStale,
-      cacheLabel: isStale ? 'hit-snapshot-stale' : 'hit-snapshot',
-    });
-  };
-
-  /** memory → table → snapshot(fresh) → snapshot-stale */
-  const tryReturnSnapshotTrend = async () => {
-    if (!isSnapshotCacheEnabled()) return null;
-
-    const fresh = await readDashboardSnapshotCache(snapshotQuery, { allowStale: false });
-    if (
-      fresh.hit &&
-      fresh.val != null &&
-      !trendPayloadIsEmpty(endpoint, fresh.val, rowsPick, pointsPick)
-    ) {
-      const near = isNearExpiryRemaining(fresh.ttlMs ?? 0, contract);
-      return returnSnapshotTrendHit(fresh, near);
-    }
-
-    const stale = await readDashboardSnapshotCache(snapshotQuery, { allowStale: true });
-    if (stale.hit && stale.val != null) {
-      return returnSnapshotTrendHit(stale, true);
-    }
-
-    logDashboardCacheLine(contract, {
-      endpoint,
-      sqlTag,
-      durationMs: 0,
-      cacheHit: false,
-      cache: 'miss',
-      cacheSource: 'snapshot-miss',
-      refreshSource,
-      ttlMs,
-      cacheKey,
-    });
-    return null;
-  };
-
-  const tryReturnSnapshotSync = async () => {
-    const { fresh, stale } = await readSnapshotLayers(snapshotCtx);
-    if (fresh.hit && fresh.val != null) {
-      const near = isNearExpiryRemaining(fresh.ttlMs ?? 0, contract);
-      const memTtl =
-        fresh.ttlMs != null && fresh.ttlMs > 0
-          ? Math.max(snapshotNearExpiryRemainingMs(contract), fresh.ttlMs)
-          : ttlMs;
-      cacheSet(cacheKey, fresh.val, memTtl);
-      if (near) {
-        scheduleDashboardBackgroundRefresh({
-          cacheKey,
-          endpoint,
-          tenantId,
-          contract,
-          extra,
-          ttlMs,
-          refreshSource,
-          loader,
-          rowsPick,
-          pointsPick,
-        });
-        return emitHit('snapshot-stale', fresh.val, memTtl, 'hit-snapshot-near-expiry', {
-          refreshPending: true,
-        });
-      }
-      return emitHit('snapshot', fresh.val, memTtl, 'hit-snapshot');
-    }
-    if (stale.hit && stale.val != null) {
-      const memTtl =
-        stale.ttlMs != null && stale.ttlMs > 0
-          ? Math.max(snapshotNearExpiryRemainingMs(contract), stale.ttlMs)
-          : ttlMs;
-      cacheSet(cacheKey, stale.val, memTtl);
-      scheduleDashboardBackgroundRefresh({
-        cacheKey,
-        endpoint,
-        tenantId,
-        contract,
-        extra,
-        ttlMs,
-        refreshSource,
-        loader,
-        rowsPick,
-        pointsPick,
-      });
-      return emitHit('snapshot-stale', stale.val, memTtl, 'hit-snapshot-stale', { refreshPending: true });
-    }
-    if (!fresh.hit && !stale.hit) {
-      logDashboardCacheLine(contract, {
-        endpoint,
-        sqlTag,
-        durationMs: 0,
-        cacheHit: false,
-        cache: 'miss',
-        cacheSource: 'snapshot-miss',
-        refreshSource,
-        ttlMs,
-        cacheKey,
-      });
-    }
-    return null;
-  };
-
   const emitTrendResult = (
     cacheSource,
     val,
@@ -739,15 +550,6 @@ async function withDashboardCache(opts) {
       memPeek.val != null &&
       !trendPayloadIsEmpty(endpoint, memPeek.val, rowsPick, pointsPick)
     ) {
-      warmDashboardSnapshot({
-        endpoint,
-        tenantId,
-        contract,
-        extra,
-        cacheKey,
-        val: memPeek.val,
-        rowsPick,
-      });
       const near = isNearExpiryRemaining(memPeek.ttlMs, contract);
       if (near) {
         scheduleDashboardBackgroundRefresh({
@@ -817,15 +619,10 @@ async function withDashboardCache(opts) {
   if (isTrendCacheEndpoint(endpoint)) {
     const memHit = cacheGet(cacheKey);
     if (memHit.hit && memHit.val != null) {
-      warmDashboardSnapshot({
-        endpoint,
-        tenantId,
-        contract,
-        extra,
-        cacheKey,
-        val: memHit.val,
-        rowsPick,
-      });
+      dashboardCacheService.logCacheEvent(
+        'CACHE_HIT_MEMORY',
+        dashboardCacheService.metaFromContract(contract, cacheKey, endpoint),
+      );
       const near = isNearExpiryRemaining(memHit.ttlMs, contract);
       if (near) {
         scheduleDashboardBackgroundRefresh({
@@ -849,50 +646,31 @@ async function withDashboardCache(opts) {
       return emitTrendResult('memory', memHit.val, memHit.ttlMs);
     }
 
-    if (isTableCacheEnabled()) {
-      const tableFresh = await readDashboardTableCache(
-        { endpoint, tenantId, contract, extra, cacheKey },
-        { allowStale: false },
+    const tableCtx = { endpoint, tenantId, contract, extra, cacheKey };
+    const tableFresh = await dashboardCacheService.readTableLayer(tableCtx, { allowStale: false });
+    if (tableFresh.hit && tableFresh.val != null) {
+      const memTtl = tableFresh.ttlMs > 0 ? tableFresh.ttlMs : tableTtlMs(endpoint, contract);
+      cacheSet(cacheKey, tableFresh.val, memTtl);
+      dashboardCacheService.logCacheEvent(
+        'CACHE_HIT_TABLE',
+        dashboardCacheService.metaFromContract(contract, cacheKey, endpoint),
       );
-      if (tableFresh.hit && tableFresh.val != null) {
-        const memTtl =
-          tableFresh.ttlMs != null && tableFresh.ttlMs > 0 ? tableFresh.ttlMs : tableTtlMs(endpoint, contract);
-        cacheSet(cacheKey, tableFresh.val, memTtl);
-        warmDashboardSnapshot({
-          endpoint,
-          tenantId,
-          contract,
-          extra,
-          cacheKey,
-          val: tableFresh.val,
-          rowsPick,
-        });
-        return emitTrendResult('table', tableFresh.val, memTtl);
-      }
+      return emitTrendResult('table', tableFresh.val, memTtl);
     }
 
-    const snapTrend = await tryReturnSnapshotTrend();
-    if (snapTrend != null) return snapTrend;
-
-    if (isTableCacheEnabled()) {
-      const tableStale = await readDashboardTableCache(
-        { endpoint, tenantId, contract, extra, cacheKey },
-        { allowStale: true, maxStaleSec: Math.max(600, Math.ceil(trendCacheTtlMs(contract) / 1000) * 2) },
+    const maxStaleSec = Math.max(600, Math.ceil(trendCacheTtlMs(contract) / 1000) * 2);
+    const tableStale = await dashboardCacheService.readTableLayer(tableCtx, {
+      allowStale: true,
+      maxStaleSec,
+    });
+    if (tableStale.hit && tableStale.val != null) {
+      const memTtl = tableStale.ttlMs > 0 ? tableStale.ttlMs : tableTtlMs(endpoint, contract);
+      cacheSet(cacheKey, tableStale.val, memTtl);
+      dashboardCacheService.logCacheEvent(
+        'CACHE_STALE',
+        dashboardCacheService.metaFromContract(contract, cacheKey, endpoint),
       );
-      if (tableStale.hit && tableStale.val != null) {
-        const memTtl =
-          tableStale.ttlMs != null && tableStale.ttlMs > 0 ? tableStale.ttlMs : tableTtlMs(endpoint, contract);
-        cacheSet(cacheKey, tableStale.val, memTtl);
-        warmDashboardSnapshot({
-          endpoint,
-          tenantId,
-          contract,
-          extra,
-          cacheKey,
-          val: tableStale.val,
-          rowsPick,
-        });
-        scheduleDashboardBackgroundRefresh({
+      scheduleDashboardBackgroundRefresh({
           cacheKey,
           endpoint,
           tenantId,
@@ -904,32 +682,22 @@ async function withDashboardCache(opts) {
           rowsPick,
           pointsPick,
         });
-        return emitTrendResult('table-stale', tableStale.val, memTtl, {
-          stale: true,
-          refreshPending: true,
-          cacheLabel: 'hit-stale',
-        });
-      }
+      return emitTrendResult('table-stale', tableStale.val, memTtl, {
+        stale: true,
+        refreshPending: true,
+        cacheLabel: 'hit-stale',
+      });
+    }
 
-      const maxStaleSec = Math.max(600, Math.ceil(trendCacheTtlMs(contract) / 1000) * 2);
-      const dimStale = await readTrendTableStaleByDimensions(
-        { endpoint, tenantId, contract, extra, cacheKey },
-        { maxStaleSec },
+    const dimStale = await dashboardCacheService.readTrendDimStale(tableCtx, maxStaleSec);
+    if (dimStale.hit && dimStale.val != null) {
+      const memTtl = dimStale.ttlMs > 0 ? dimStale.ttlMs : tableTtlMs(endpoint, contract);
+      cacheSet(cacheKey, dimStale.val, memTtl);
+      dashboardCacheService.logCacheEvent(
+        'CACHE_STALE',
+        dashboardCacheService.metaFromContract(contract, cacheKey, endpoint),
       );
-      if (dimStale.hit && dimStale.val != null) {
-        const memTtl =
-          dimStale.ttlMs != null && dimStale.ttlMs > 0 ? dimStale.ttlMs : tableTtlMs(endpoint, contract);
-        cacheSet(cacheKey, dimStale.val, memTtl);
-        warmDashboardSnapshot({
-          endpoint,
-          tenantId,
-          contract,
-          extra,
-          cacheKey,
-          val: dimStale.val,
-          rowsPick,
-        });
-        scheduleDashboardBackgroundRefresh({
+      scheduleDashboardBackgroundRefresh({
           cacheKey,
           endpoint,
           tenantId,
@@ -941,12 +709,11 @@ async function withDashboardCache(opts) {
           rowsPick,
           pointsPick,
         });
-        return emitTrendResult('table-stale', dimStale.val, memTtl, {
-          stale: true,
-          refreshPending: true,
-          cacheLabel: 'hit-stale-dim',
-        });
-      }
+      return emitTrendResult('table-stale', dimStale.val, memTtl, {
+        stale: true,
+        refreshPending: true,
+        cacheLabel: 'hit-stale-dim',
+      });
     }
 
     if (!trendRefreshInflight.has(cacheKey)) {
@@ -968,15 +735,10 @@ async function withDashboardCache(opts) {
 
   const cached = cacheGet(cacheKey);
   if (cached.hit && cached.val != null) {
-    warmDashboardSnapshot({
-      endpoint,
-      tenantId,
-      contract,
-      extra,
-      cacheKey,
-      val: cached.val,
-      rowsPick,
-    });
+    dashboardCacheService.logCacheEvent(
+      'CACHE_HIT_MEMORY',
+      dashboardCacheService.metaFromContract(contract, cacheKey, endpoint),
+    );
     const near = isNearExpiryRemaining(cached.ttlMs, contract);
     if (near) {
       scheduleDashboardBackgroundRefresh({
@@ -998,45 +760,20 @@ async function withDashboardCache(opts) {
     return emitHit('memory', cached.val, cached.ttlMs);
   }
 
-  if (isTableCacheEnabled()) {
-    const tableHit = await readDashboardTableCache(
-      { endpoint, tenantId, contract, extra, cacheKey },
-      { allowStale: false },
-    );
-    if (tableHit.hit && tableHit.val != null) {
-      const val = /** @type {T} */ (tableHit.val);
-      const memTtl = tableHit.ttlMs != null && tableHit.ttlMs > 0 ? tableHit.ttlMs : ttlMs;
-      cacheSet(cacheKey, val, memTtl);
-      warmDashboardSnapshot({
-        endpoint,
-        tenantId,
-        contract,
-        extra,
-        cacheKey,
-        val,
-        rowsPick,
-      });
-      return emitHit('table', val, memTtl);
-    }
-  }
-
-  const snapSync = await tryReturnSnapshotSync();
-  if (snapSync != null) return snapSync;
-
-  const t0 = Date.now();
-  const val = await loader();
-  const durationMs = Date.now() - t0;
-  persistDashboardCaches({
-    cacheKey,
-    val,
-    ttlMs,
+  const cacheResult = await dashboardCacheService.getDashboardCache(cacheKey, loader, {
     endpoint,
     tenantId,
     contract,
     extra,
+    ttlMs,
     refreshSource,
-    rowsPick,
+    skipMemory: true,
   });
+  const val = /** @type {T} */ (cacheResult.value);
+  if (cacheResult.source === 'table') {
+    return emitHit('table', val, cacheResult.ttlMs);
+  }
+  const durationMs = 0;
   const rows = rowsPick ? rowsPick(val) : undefined;
   const points = pointsPick ? pointsPick(val) : undefined;
   logDashboardCacheLine(contract, {
@@ -1077,7 +814,7 @@ async function withDashboardCache(opts) {
 }
 
 function clearDashboardCache() {
-  memCache.clear();
+  dashboardCacheService.clearMemoryCache();
 }
 
 module.exports = {

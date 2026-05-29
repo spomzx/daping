@@ -92,6 +92,7 @@ function mergeByShopId(items) {
  */
 function extractCacheShopsFromStorage(storageDir, req) {
   const ordersPack = readJsonSafe(path.join(storageDir, 'orders-cache.json'), req) || {};
+  /** @deprecated legacy import only — gmv-cache.json，非 SaaS API 数据源 */
   const gmvPack = readJsonSafe(path.join(storageDir, 'gmv-cache.json'), req) || {};
   const merged = mergeByShopId([...extractFromOrdersCache(ordersPack), ...extractFromGmvCache(gmvPack)]);
   return merged;

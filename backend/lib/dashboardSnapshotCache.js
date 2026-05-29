@@ -2,7 +2,9 @@
 
 /**
  * Dashboard JSON snapshot 本地缓存（非事实源；MySQL-only 原则不变）
- * 读取优先级由 dashboardCache 编排：memory → table → snapshot → MySQL
+ * @deprecated Snapshot is no longer part of SaaS dashboard primary cache path.
+ * SaaS 主读链路为 memory → dashboard_*_cache 表 → MySQL loader（见 dashboardCacheService）。
+ * 本模块仅供 warmup/cleanup 运维与历史兼容，禁止在 withDashboardCache 主路径读取。
  */
 
 const fs = require('fs');
@@ -364,6 +366,7 @@ async function resolveSnapshotFileByHash(paths, hash6) {
  *   stale?: boolean,
  *   logSource: 'snapshot'|'snapshot-stale'|'snapshot-miss'|'snapshot-invalid',
  * }>}
+ * @deprecated Snapshot is no longer part of SaaS dashboard primary cache path.
  */
 async function readDashboardSnapshotCache(query, readOpts = {}) {
   const miss = (logSource) => ({ hit: false, logSource });

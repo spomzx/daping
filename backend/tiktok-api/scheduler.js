@@ -18,6 +18,7 @@ const { isSyncQueueOnly } = require('../sync/services/syncEnv');
 const { isDashboardMysqlOnly } = require('../lib/saasMysqlOnly');
 
 const storageDir = path.join(__dirname, '..', 'storage');
+/** @deprecated legacy worker only — SaaS API 禁止读取 orders-cache.json */
 const ORDERS_CACHE_PATH = path.join(storageDir, 'orders-cache.json');
 const ORDERS_CACHE_LOCK = 'orders-cache.json';
 

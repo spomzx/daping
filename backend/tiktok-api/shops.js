@@ -7,7 +7,10 @@ const {
   withStorageLockSync,
 } = require('../lib/storageFile');
 
-/** 生产环境固定路径；本地可通过 SHOPS_JSON_PATH 覆盖 */
+/**
+ * @deprecated legacy worker / 紧急回滚 only — SaaS API 禁止直接读取 shops.json
+ * 生产环境固定路径；本地可通过 SHOPS_JSON_PATH 覆盖
+ */
 const SHOPS_PATH =
   process.env.SHOPS_JSON_PATH || path.join(__dirname, '..', 'storage', 'shops.json');
 
